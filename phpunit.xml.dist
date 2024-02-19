@@ -6,7 +6,12 @@
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
-         convertDeprecationsToExceptions="false"
+         convertDeprecationsToExceptions="true"
+         convertWarningsToExceptions="true"
+         convertNoticesToExceptions="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         verbose="true"
 >
     <php>
         <ini name="display_errors" value="1" />
@@ -27,6 +32,10 @@
         <include>
             <directory suffix=".php">src</directory>
         </include>
+        <exclude>
+            <directory suffix=".php">src/DataFixtures</directory>
+            <directory suffix=".php">src/Controller/Admin</directory>
+        </exclude>
     </coverage>
 
     <listeners>
