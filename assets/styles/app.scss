@@ -1,0 +1,121 @@
+$primary: #124660;
+$secondary: #1b9476;
+$success: #c7dbc2;
+$tertiary: #8bd59e;
+$vertPomme: #8fb43a;
+$alert: #c6303e;
+
+// the ~ allows you to reference things in node_modules
+@import "~bootstrap/scss/bootstrap";
+
+/** Elements page HTML */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  background-color: #f8f9fa; /* Couleur de fond */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Minimum 100% de la hauteur de la fenêtre */
+  margin: 0;
+}
+header {
+  border-bottom: 1px solid #e5e9ef;
+}
+
+main {
+  flex-grow: 1; /* Prend le reste de l'espace disponible */
+}
+
+div.form-error {
+  color: $alert;
+  padding: 1em;
+}
+.footer {
+  color: #ffffff;
+  padding: 20px;
+  border-top: 1px solid #e5e9ef;
+}
+footer a.nav-link {
+  font-size: 1rem;
+}
+* {
+  margin: 0;
+}
+
+#calendrier {
+  width: 80%;
+  margin: auto;
+}
+
+.input-group-append {
+  cursor: pointer;
+}
+/** */
+label.required:before {
+  content: "* ";
+  color: red;
+}
+a {
+  font-family: "Darker Grotesque", sans-serif;
+  font-size: 20px;
+  text-decoration: none;
+}
+h1,
+h2,
+h3 {
+  color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
+}
+h1 {
+  font-size: 2.5rem;
+  text-align: left;
+  padding: 1em 1em 1em 0;
+  font-family: "sans-serif";
+}
+
+/** Barre de MENU */
+.lavish {
+  font-family: "Lavishly Yours", cursive;
+}
+
+.customSubMenuHolder:hover > .customSubMenu {
+  display: block;
+}
+.customSubMenu {
+  display: none;
+  box-shadow: 2px 8px 12px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  width: 100%;
+  left: 0;
+  background: #00354b;
+}
+a.nav-link {
+  font-size: 1.1rem;
+  color: white;
+}
+/** SEJOURS : STAY */
+.selectItem {
+  background-color: #dcdfda;
+}
+tr.encours td,
+tr.encours th {
+  background-color: $vertPomme;
+}
+i.encours {
+  color: $vertPomme;
+}
+tr.passe td,
+tr.passe th {
+  background-color: $secondary;
+}
+i.passe {
+  color: $secondary;
+}
+tr.avenir td,
+tr.avenir th {
+  background-color: $tertiary;
+}
+i.avenir {
+  color: $tertiary;
+}
