@@ -81,18 +81,18 @@
 
           {% endif %}
           <li class="nav-item mx-2">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ path('app_logout') }}">
               <span class="ms-1 align-texttop">Déconnexion</span>
             </a>
           </li>
           {% else %}
           <li class="nav-item mx-2">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ path('app_login') }}">
               <span class="ms-1 align-texttop">Connexion</span>
             </a>
           </li>
           <li class="nav-item mx-2">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ path('app_inscription') }}">
               <span class="ms-1 align-texttop">Inscription</span>
             </a>
           </li>
