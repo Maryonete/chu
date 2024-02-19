@@ -48,10 +48,10 @@ class Patient
         $this->stays = new ArrayCollection();
     }
 
-    public function __toString()
-    {
-        return $this->getUser();
-    }
+    // public function __toString()
+    // {
+    //     return $this->getUser()->getLastname() . ' ' . $this->getUser()->getFirstname();
+    // }
     public function getId(): ?int
     {
         return $this->id;
