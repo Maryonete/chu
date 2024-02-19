@@ -16,6 +16,9 @@ class PatientController extends AbstractController
     #[Route('/patient', name: 'app_home_patient')]
     public function index(): Response
     {
+        if ($this->getUser() and in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin');
+        }
         return $this->render('pages/patient/index.html.twig', []);
     }
     /**
