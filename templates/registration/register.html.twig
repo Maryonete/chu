@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %} {% block title %}Création compte patient{%
+endblock %} {% block body %}
+
+{{ form_errors(registrationForm) }}
+
+<div class="row justify-content-md-center my-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title text-center mb-4">
+          Création d'un compte patient
+        </h1>
+        {{ form_start(registrationForm) }}
+        <div class="mb-3">
+          <div class="form-group">
+            {{ form_label(registrationForm.email) }}
+            {{ form_widget(registrationForm.email) }}
+            <div class="form-error">
+              {{ form_errors(registrationForm.email) }}
+            </div>
+          </div>
+          <div class="form-group">
+            {{ form_label(registrationForm.plainPassword) }}
+            {{ form_widget(registrationForm.plainPassword) }}
+            <div class="form-error">
+              {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+          </div>
+          <hr class="mt-5 mb-0" />
+          <div class="form-group">
+            {{ form_label(registrationForm.lastname) }}
+            {{ form_widget(registrationForm.lastname) }}
+            <div class="form-error">
+              {{ form_errors(registrationForm.lastname) }}
+            </div>
+          </div>
+          <div class="form-group">
+            {{ form_label(registrationForm.firstname) }}
+            {{ form_widget(registrationForm.firstname) }}
+            <div class="form-error">
+              {{ form_errors(registrationForm.firstname) }}
+            </div>
+          </div>
+          <div class="form-group">
+            {{ form_widget(registrationForm.patient) }}
+            <div class="form-error">
+              {{ form_errors(registrationForm.patient) }}
+            </div>
+          </div>
+
+          <div class="form-group my-4">
+            Votre inscription entraînera la création de votre compte patient et,
+            par là même, l’acceptation de votre part de nos conditions
+            générales. Veuillez trouver en bas de page des renseignements
+            relatifs à votre droit de rétractation et au traitement de vos
+            données.
+          </div>
+
+          <div class="form-group text-center">
+            <button
+              type="submit"
+              name="createAccount"
+              class="btn btn-success mb-8 mt-4"
+            >
+              S'enregistrer
+            </button>
+          </div>
+        </div>
+        {{ form_end(registrationForm) }}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
