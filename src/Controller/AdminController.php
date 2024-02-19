@@ -5,10 +5,9 @@ namespace App\Controller;
 use App\Entity\Calendar;
 use App\Entity\Medecin;
 use App\Entity\Stay;
-use App\Entity\User;
 use App\Form\CalendarType;
-use App\Form\MedecinEditType;
 use App\Form\MedecinNewType;
+use App\Form\MedecinEditType;
 use App\Repository\MedecinRepository;
 use App\Repository\StayRepository;
 use DateTime;
@@ -16,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +42,9 @@ class AdminController extends AbstractController
     #[Route('/', name: 'admin')]
     public function index(): Response
     {
+
+        dump($GLOBALS);
+
         $listeStayWait = $this->stayRepo->findBy(['validate' => 0], ['start_date' => 'ASC']);
         $listeMedecin = $this->medecinRepo->findAll();
         return $this->render('admin/index.html.twig', [
@@ -68,54 +69,48 @@ class AdminController extends AbstractController
     ): Response {
 
         // nouveau rdv
-        // $form = $this->createForm(CalendarType::class);
-        // $form->add('save', SubmitType::class, [
-        //     'label' => 'Enregistrer',
-        //     'attr' => [
-        //         'class' => 'btn btn-primary',
-        //     ],
-        // ]);
-        // $form->handleRequest($request);
+        $form = $this->createForm(CalendarType::class);
+        $form->add('save', SubmitType::class, [
+            'label' => 'Enregistrer',
+            'attr' => [
+                'class' => 'btn btn-primary',
+            ],
+        ]);
+        $form->handleRequest($request);
 
-        // if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        //     /** @var Calendar $calendar */
-        //     $calendar = $form->getData();
-        //     $calendar->setStart(new DateTime($request->get('start') . ' ' . $request->get('startHeure')));
-        //     $calendar->setEnd(new DateTime($request->get('end') . ' ' . $request->get('endHeure')));
-        //     $calendar->setMedecin($medecin);
+            /** @var Calendar $calendar */
+            $calendar = $form->getData();
+            $calendar->setStart(new DateTime($request->get('start') . ' ' . $request->get('startHeure')));
+            $calendar->setEnd(new DateTime($request->get('end') . ' ' . $request->get('endHeure')));
+            $calendar->setMedecin($medecin);
 
-        //     // Calendrier relié a un séjour patient
-        //     if ($request->get('stay') !== null) {
-        //         /** @var Stay $stay */
-        //         $stay = $stayRepo->find($request->get('stay'));
-        //         $stay->setValidate(true);
-        //         $em->persist($stay);
-        //         $calendar->setStay($stay);
-        //     }
+            // Calendrier relié a un séjour patient
+            if ($request->get('stay') !== null) {
+                /** @var Stay $stay */
+                $stay = $stayRepo->find($request->get('stay'));
+                $stay->setValidate(true);
+                $em->persist($stay);
+                $calendar->setStay($stay);
+            }
 
-        //     $em->persist($calendar);
-        //     $em->flush();
-        //     return $this->redirectToRoute(
-        //         'app_admin_medecin_calendar',
-        //         ['id' => $medecin->getId()],
-        //         Response::HTTP_SEE_OTHER
-        //     );
-        // }
-        // // rdv en attente
-        // $listeStayWait = $this->stayRepo->findBy(['validate' => 0, 'medecin' => $medecin], ['start_date' => 'ASC']);
+            $em->persist($calendar);
+            $em->flush();
+            return $this->redirectToRoute(
+                'app_admin_medecin_calendar',
+                ['id' => $medecin->getId()],
+                Response::HTTP_SEE_OTHER
+            );
+        }
+        // rdv en attente
+        $listeStayWait = $this->stayRepo->findBy(['validate' => 0, 'medecin' => $medecin], ['start_date' => 'ASC']);
 
-        // return $this->render('admin/calendar_medecin.html.twig', [
-        //     'medecin'       =>  $medecin,
-        //     'listeStayWait' =>  $listeStayWait,
-        //     'form'          =>  $form,
-        //     'medecin_event_limit_day' => $parameterBagInterface->get('medecin_event_limit_day'),
-        // ]);
-        $listeStayWait = $this->stayRepo->findBy(['validate' => 0], ['start_date' => 'ASC']);
-        $listeMedecin = $this->medecinRepo->findAll();
-        return $this->render('admin/index.html.twig', [
+        return $this->render('admin/calendar_medecin.html.twig', [
+            'medecin'       =>  $medecin,
             'listeStayWait' =>  $listeStayWait,
-            'listeMedecin'  =>  $listeMedecin,
+            'form'          =>  $form,
+            'medecin_event_limit_day' => $parameterBagInterface->get('medecin_event_limit_day'),
         ]);
     }
     /**
@@ -126,11 +121,11 @@ class AdminController extends AbstractController
     public function calendarMedecinJson(Medecin $medecin): Response|JsonResponse
     {
         // liste des rendez-vous du medecin
-        // $calendar = $medecin->getCalendars();
+        $calendar = $medecin->getCalendars();
         $arrayRDV = [];
-        // foreach ($calendar as $rdv) {
-        //     $arrayRDV[] = $rdv->toArray();
-        // }
+        foreach ($calendar as $rdv) {
+            $arrayRDV[] = $rdv->toArray();
+        }
         return $this->json($arrayRDV);
     }
     /**
