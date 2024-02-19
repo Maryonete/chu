@@ -36,6 +36,13 @@ class HomeController extends AbstractController
 
         ]);
     }
+    #[Route('/speciality', name: 'app_speciality_list')]
+    public function speciality_list(SpecialityRepository $speRepo): Response
+    {
+        return $this->render('pages/speciality_list.html.twig', [
+            'specialites' => $speRepo->findBy([], ['name' => 'ASC']),
+        ]);
+    }
     /** pages statiques */
     #[Route('/mentions_legales', name: 'app_mentions_legales', methods: ['GET', 'POST'])]
     public function mentions_legales(): Response
