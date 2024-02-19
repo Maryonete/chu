@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Medecin;
 use App\Entity\Patient;
 use App\Entity\Speciality;
 use App\Entity\User;
@@ -57,7 +58,29 @@ class AppFixtures extends Fixture
         $admin->setEmail('admin@studi.fr');
         $manager->persist($admin);
 
+        // MEDECIN
+        $medecins = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $user = new User();
+            $user->setRoles(['ROLE_MEDECIN']);
+            // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
+            $user->setPassword($this->encoder->hashPassword($user, 'test'));
+            $user->setFirstName($this->faker->firstName);
+            $user->setLastName($this->faker->lastName);
+            $user->setEmail($this->faker->email);
+            $manager->persist($user);
 
+            for ($j = 1; $j <= 6; $j++) {
+                $medecin = new Medecin();
+                $medecin->setUser($user);
+                for ($k = 1; $k <= 6; $k++) {
+                    $medecin->addSpeciality($this->faker->randomElement($listSpe));
+                }
+            }
+            $manager->persist($medecin);
+
+            $medecins[] = $medecin;
+        }
         // USER
         for ($i = 1; $i <= 10; $i++) {
             $email = $this->faker->email;

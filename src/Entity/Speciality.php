@@ -28,7 +28,13 @@ class Speciality
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\ManyToMany(targetEntity: Medecin::class, mappedBy: 'speciality')]
+    private Collection $medecins;
 
+    public function __construct()
+    {
+        $this->medecins = new ArrayCollection();
+    }
     public function __toString()
     {
         return $this->getName();
@@ -58,6 +64,32 @@ class Speciality
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+    /**
+     * @return Collection<int, Medecin>
+     */
+    public function getMedecins(): Collection
+    {
+        return $this->medecins;
+    }
+
+    public function addMedecin(Medecin $medecin): static
+    {
+        if (!$this->medecins->contains($medecin)) {
+            $this->medecins->add($medecin);
+            $medecin->addSpeciality($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedecin(Medecin $medecin): static
+    {
+        if ($this->medecins->removeElement($medecin)) {
+            $medecin->removeSpeciality($this);
+        }
 
         return $this;
     }

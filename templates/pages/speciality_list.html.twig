@@ -19,6 +19,14 @@
       <p style="text-align: justify">
         {{ spe.description | raw }}
       </p>
+      {% if spe.getMedecins|length > 0 %}
+      <p>
+        <b>Médecins:</b> {% for medecin in spe.getMedecins|sort((a, b) =>
+        a.user.lastname <=> b.user.lastname) %}
+        {{ medecin.user.lastname }}
+        {{ medecin.user.firstname }}, {% endfor %}
+      </p>
+      {% endif %}
     </div>
     {% endfor %}
   </div>

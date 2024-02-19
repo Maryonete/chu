@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiResource;
+use App\Repository\MedecinRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+#[ORM\Entity(repositoryClass: MedecinRepository::class)]
+#[ApiResource]
+class Medecin
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\ManyToMany(targetEntity: Speciality::class, inversedBy: 'medecins')]
+    private Collection $speciality;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    public function __construct()
+    {
+        $this->speciality = new ArrayCollection();
+    }
+    public function toArray(): array
+    {
+        return [
+            "id" => $this->getId(),
+            "name" => $this->getUser()->getLastName() . "  " . $this->getUser()->getFirstName(),
+        ];
+    }
+    public function __toString()
+    {
+        return $this->getUser()->getLastName() . "  " . $this->getUser()->getFirstName();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    /**
+     * @return Collection<int, Speciality>
+     */
+    public function getSpeciality(): Collection
+    {
+        return $this->speciality;
+    }
+
+    public function addSpeciality(Speciality $speciality): static
+    {
+        if (!$this->speciality->contains($speciality)) {
+            $this->speciality->add($speciality);
+        }
+
+        return $this;
+    }
+
+    public function removeSpeciality(Speciality $speciality): static
+    {
+        $this->speciality->removeElement($speciality);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+}
