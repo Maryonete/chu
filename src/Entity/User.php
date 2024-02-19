@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min: 2, max: 60)]
     private ?string $lastname = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Patient $patient = null;
+
     public function __toString()
     {
         return $this->getFirstName() . '  ' . $this->getLastName();
@@ -162,6 +165,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getPatient(): ?Patient
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(Patient $patient): static
+    {
+        // set the owning side of the relation if necessary
+        if ($patient->getUser() !== $this) {
+            $patient->setUser($this);
+        }
+
+        $this->patient = $patient;
 
         return $this;
     }
