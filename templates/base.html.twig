@@ -11,7 +11,7 @@
 
     <link
       rel="icon"
-      type="image/jpg"
+      type="image/png"
       href="{{ asset('build/images/logoBlack.png') }}"
     />
     <link
@@ -34,9 +34,7 @@
     {{
       encore_entry_script_tags("app")
     }}
-    {% block importmap %}{{
-      importmap("app")
-    }}{% endblock %} {% endblock %}
+    {% endblock %}
   </head>
   <body>
     {% include 'partials/_header.html.twig' %}

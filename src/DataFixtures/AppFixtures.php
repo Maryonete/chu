@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Medecin;
 use App\Entity\Patient;
 use App\Entity\Speciality;
+use App\Entity\Stay;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -109,6 +110,35 @@ class AppFixtures extends Fixture
             $patient->setAdCity($this->faker->city);
             $manager->persist($user);
             $manager->persist($patient);
+            // sejour
+            for ($k = 1; $k <= 10; $k++) {
+                $sejour = new Stay();
+                $sejour->setpatient($patient);
+                $sejour->setReason($this->faker->sentence);
+                $sejour->setDescription($this->faker->paragraph);
+                $sejour->setSpeciality($this->faker->randomElement($listSpe));
+                $sejour->setMedecin($this->faker->randomElement($medecins));
+
+                // on enregistre au moins 2 séjours à venir
+                if ($k < 3) {
+                    $dateA = $this->faker->dateTimeBetween('+1 month', '+1 year');
+                } else {
+                    $dateA = $this->faker->dateTimeBetween('-1 year', '+1 year');
+                }
+                $dateB = $this->faker->dateTimeBetween('-1 year', '+1 year');
+
+                if ($dateA < $dateB) {
+                    $sejour->setStartDate($dateA);
+                    $sejour->setEndDate($dateB);
+                } else {
+                    $sejour->setStartDate($dateB);
+                    $sejour->setEndDate($dateA);
+                }
+                if ($now > $sejour->getStartDate()) {
+                    $sejour->setValidate(true);
+                }
+                $manager->persist($sejour);
+            }
         }
         $manager->flush();
     }
