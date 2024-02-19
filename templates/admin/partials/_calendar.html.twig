@@ -1,0 +1,109 @@
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.1/jquery.timepicker.min.css"
+/>
+
+<h1>
+  Agenda du médecin {{ medecin.user.firstname }} {{ medecin.user.lastname }}
+</h1>
+<div id="calendar"></div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="rdvModal"
+  tabindex="-1"
+  aria-labelledby="rdvModalLabel"
+  aria-hidden="true"
+>
+  {{ form_start(form) }}
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="rdvModalLabel">Nouveau rendez-vous</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-2">
+            <b>Début : </b>
+          </div>
+          <div class="col-3">
+            <input type="date" name="start" class="deb" readonly />
+          </div>
+          <div class="col-4">
+            à <input type="text" name="startHeure" id="startHeure" required />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+            <b>Fin: </b>
+          </div>
+          <div class="col-3">
+            <input type="date" name="end" class="fin" readonly="true" />
+          </div>
+          <div class="col-4">
+            à <input type="text" name="endHeure" id="endHeure" required />
+          </div>
+          <div class="form-group">
+            {{ form_label(form.title) }}
+            {{ form_widget(form.title) }}
+            <div class="form-error">
+              {{ form_errors(form.title) }}
+            </div>
+          </div>
+          <div class="form-group">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description) }}
+            <div class="form-error">
+              {{ form_errors(form.description) }}
+            </div>
+          </div>
+
+          <div class="row bg-primary pt-2 mx-1 text-white">
+            {% if listeStayWait|length ==0 %}
+            <b class="text-warning">
+              Aucun rendez-vous en attente de confirmation
+            </b>
+            {% else %}
+            <b>Rendez-vous en attente de confirmation</b>
+            {% include 'admin/partials/_list_stay_wait.html.twig' with {'list':
+            'check'} %} {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Annuler
+        </button>
+
+        {{ form_widget(form.save) }}
+      </div>
+    </div>
+  </div>
+  {{ form_end(form) }}
+</div>
+
+<input
+  type="hidden"
+  name="id_medecin"
+  id="id_medecin"
+  value="{{ medecin.id }}"
+/>
+<input
+  type="hidden"
+  name="url"
+  class="url"
+  value="{{ path('app_admin_medecin_calendar_json', { id: medecin.id }) }}"
+/>
+<input
+  type="hidden"
+  name="medecin_event_limit_day"
+  id="medecin_event_limit_day"
+  value="{{ medecin_event_limit_day }}"
+/>

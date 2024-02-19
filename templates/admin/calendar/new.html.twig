@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %} {% block title %}Nouveau rendez-vous{% endblock
+%} {% block body %}
+<div class="container">
+  <div class="row">
+    <h1>Nouvel rendez-vous</h1>
+
+    {{ include("admin/calendar/_form.html.twig") }}
+
+    {{ include("admin/partials/_calendar.html.twig") }}
+    <a href="{{ path('app_calendar_index') }}" class="btn btn-primary"
+      >Retour à la liste</a
+    >
+  </div>
+</div>
+{% endblock %} {% block javascripts %}
+{{ encore_entry_script_tags("app") }}
+{{ encore_entry_script_tags("calendar") }}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %} {% block title %}Modifier rendez-vous{% endblock
+%} {% block body %}
+<div class="container">
+  <div class="row">
+    <h1>Modifier emploi du temps</h1>
+
+    {{ include("admin/calendar/_form.html.twig") }}
+
+    {{ include("admin/partials/_calendar.html.twig") }}
+  </div>
+</div>
+{% endblock %} {% block javascripts %}
+{{ encore_entry_script_tags("app") }}
+{{ encore_entry_script_tags("calendar") }}
+{% endblock %}

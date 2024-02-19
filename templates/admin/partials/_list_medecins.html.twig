@@ -27,7 +27,13 @@
           {% endfor %}
         </td>
         <td class="text-center align-middle">
-          <a href="" alt="add to calendar"
+          <a
+            href="{{
+              path('app_admin_medecin_calendar', {
+                id: medecin.id
+              })
+            }}"
+            alt="add to calendar"
             ><i class="fa-solid fa-calendar-days"></i
           ></a>
         </td>

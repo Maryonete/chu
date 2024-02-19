@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %} {% block title %}Agenda du médecin
+{{ medecin.user.firstname }} {{ medecin.user.lastname }} {% endblock %} {% block
+body %}
+<div class="container">
+  {% include 'admin/partials/_calendar.html.twig' %}
+  <div class="row">
+    {% if listeStayWait|length ==0 %}
+    <h1 class="text-warning">Aucun rendez-vous en attente de confirmation</h1>
+    {% else %}
+    <h1>Rendez-vous en attente de confirmation</h1>
+    {% include 'admin/partials/_list_stay_wait.html.twig' with {'list': ''} %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %} {% block javascripts %}
+{{ encore_entry_script_tags("app") }}
+{{ encore_entry_script_tags("calendar") }}
+{% endblock %}
