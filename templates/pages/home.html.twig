@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %} {% block title %}Accueil SoigneMoi{% endblock %}
+{% block body %}
+<div class="container col-xxl-8 px-4 py-2">
+  <div class="row align-items-center g-5 py-5">
+    <div class="col-10 col-sm-8 col-lg-6">
+      <img
+        src="{{ asset('build/images/medecin.jpg') }}"
+        class="d-block mx-lg-auto img-fluid"
+        alt="Photo accueil"
+        width="700"
+        height="500"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="col-lg-6">
+      <h1 class="display-5 lh-1 text-center">CHU SoigneMoi</h1>
+      <p class="lead">
+        Le CHU SoigneMoi est classée à la 2e position du Palmarès national des
+        meilleures hospitaux de France établi par le magazine Le Point.
+        L'hospital SoigneMoi est un établissement médico-chirurgical dont le
+        projet médical s'articule autour de trois pôles de référence :
+      </p>
+      <ul>
+        <li>
+          <b>un pôle de cardiologie</b> (cardiologie médicale, cardiologie
+          interventionnelle, chirurgie cardiaque et vasculaire)
+        </li>
+        <li>
+          <b>un pôle chirurgical</b> (neurochirurgie, chirurgie viscérale et
+          digestive, chirurgie de l’obésité, chirurgie urologique…)
+        </li>
+        <li>
+          <b>un pôle médical</b> (neurologie, gastro-entérologie, gériatrie,
+          médecine interne, pneumologie…).
+        </li>
+      </ul>
+      <p></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

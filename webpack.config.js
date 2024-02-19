@@ -54,19 +54,28 @@ Encore
   })
 
   // enables Sass/SCSS support
-  .enableSassLoader();
+  .enableSassLoader()
 
-// uncomment if you use TypeScript
-//.enableTypeScriptLoader()
+  .copyFiles({
+    from: "./assets/images",
+    to: "images/[path][name].[ext]",
+  })
+  .copyFiles({
+    from: "./assets/js",
+    to: "js/[path][name].[ext]",
+  })
 
-// uncomment if you use React
-//.enableReactPreset()
+  // uncomment if you use TypeScript
+  //.enableTypeScriptLoader()
 
-// uncomment to get integrity="..." attributes on your script & link tags
-// requires WebpackEncoreBundle 1.4 or higher
-//.enableIntegrityHashes(Encore.isProduction())
+  // uncomment if you use React
+  //.enableReactPreset()
 
-// uncomment if you're having problems with a jQuery plugin
-//.autoProvidejQuery()
+  // uncomment to get integrity="..." attributes on your script & link tags
+  // requires WebpackEncoreBundle 1.4 or higher
+  //.enableIntegrityHashes(Encore.isProduction())
+
+  // uncomment if you're having problems with a jQuery plugin
+  .autoProvidejQuery();
 
 module.exports = Encore.getWebpackConfig();
