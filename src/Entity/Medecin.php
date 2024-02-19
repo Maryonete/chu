@@ -26,10 +26,15 @@ class Medecin
 
     #[ORM\OneToMany(mappedBy: 'medecin', targetEntity: Stay::class)]
     private Collection $stays;
+
+    #[ORM\OneToMany(mappedBy: 'medecin', targetEntity: Calendar::class, orphanRemoval: true)]
+    private Collection $calendars;
+
     public function __construct()
     {
         $this->speciality = new ArrayCollection();
         $this->stays = new ArrayCollection();
+        $this->calendars = new ArrayCollection();
     }
     public function toArray(): array
     {
@@ -105,6 +110,34 @@ class Medecin
         if ($this->stays->removeElement($stay) && $stay->getMedecin() === $this) {
             // set the owning side to null (unless already changed)
             $stay->setMedecin(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Calendar>
+     */
+    public function getCalendars(): Collection
+    {
+        return $this->calendars;
+    }
+
+    public function addCalendar(Calendar $calendar): static
+    {
+        if (!$this->calendars->contains($calendar)) {
+            $this->calendars->add($calendar);
+            $calendar->setMedecin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendar(Calendar $calendar): static
+    {
+        if ($this->calendars->removeElement($calendar) && $calendar->getMedecin() === $this) {
+            // set the owning side to null (unless already changed)
+            $calendar->setMedecin(null);
         }
 
         return $this;

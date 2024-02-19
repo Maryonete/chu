@@ -1,0 +1,32 @@
+{{ form_start(form) }}
+
+<div class="col">
+  {% if calendar.stay.speciality is defined %}
+  <div class="form-group mb-2">
+    <label class="form-label">Spécialité : </label>
+    {{ calendar.stay.speciality.name }}
+  </div>
+
+  {% endif %}
+
+  <div class="form-group">
+    {{ form_label(form.title) }}
+    {{ form_widget(form.title) }}
+    <div class="form-error">
+      {{ form_errors(form.title) }}
+    </div>
+  </div>
+  <div class="form-group">
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description) }}
+    <div class="form-error">
+      {{ form_errors(form.description) }}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <button class="btn btn-primary mb-3" id="btnValidateForm">
+    {{ button_label|default('Enregistrer') }}
+  </button>
+</div>
+{{ form_end(form) }}
