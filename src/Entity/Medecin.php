@@ -24,9 +24,12 @@ class Medecin
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\OneToMany(mappedBy: 'medecin', targetEntity: Stay::class)]
+    private Collection $stays;
     public function __construct()
     {
         $this->speciality = new ArrayCollection();
+        $this->stays = new ArrayCollection();
     }
     public function toArray(): array
     {
@@ -76,6 +79,33 @@ class Medecin
     public function setUser(User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+    /**
+     * @return Collection<int, Stay>
+     */
+    public function getStays(): Collection
+    {
+        return $this->stays;
+    }
+
+    public function addStay(Stay $stay): static
+    {
+        if (!$this->stays->contains($stay)) {
+            $this->stays->add($stay);
+            $stay->setMedecin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStay(Stay $stay): static
+    {
+        if ($this->stays->removeElement($stay) && $stay->getMedecin() === $this) {
+            // set the owning side to null (unless already changed)
+            $stay->setMedecin(null);
+        }
 
         return $this;
     }

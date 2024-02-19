@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %} {% block title %}Séjour{% endblock %} {% block
+body %}
+
+<div class="container">
+  <h1>Planifier un séjour</h1>
+
+  {% if form_errors(form) is not empty %}
+  <div class="alert alert-danger">{{ form_errors(form) }}</div>
+  {% endif %}
+
+  {{ form_start(form) }}
+  <div class="my-3 p-3 bg-body rounded shadow-sm divBlocSpe">
+    <h5 class="border-bottom pb-2 mb-0" id="blocSpeTitle">
+      1. sélection de la spécialité
+    </h5>
+    <div class="col-md-8 mt-4" id="blocSpe">
+      {{ form_widget(form.speciality) }}
+      {{ form_errors(form.speciality) }}
+    </div>
+  </div>
+  <div
+    class="my-3 p-3 bg-body rounded shadow-sm d-none bloqueListeMedecins"
+    id="blocMedecin"
+  >
+    <h5 class="border-bottom pb-2 mb-0" id="blocMedecinTitle">
+      2. sélection du médecin
+    </h5>
+    <div class="col-md-8 mt-4" id="blocMedecinList">
+      {{ form_widget(form.medecin) }}
+      {{ form_errors(form.medecin) }}
+    </div>
+  </div>
+
+  <div class="my-3 p-3 bg-body rounded shadow-sm d-none" id="blocDatesSelect">
+    <div class="row g-3">
+      <h5 class="border-bottom pb-2 mb-0">
+        3. sélection des dates de votre séjour
+      </h5>
+      <div class="col-md-8 startDatesList">
+        <div class="form-group mb-5">
+          {{ form_label(form.start_date) }}
+          <div class="input-group date" id="datepickerStart">
+            {{ form_widget(form.start_date) }}
+            <span class="input-group-append">
+              <span class="input-group-text bg-light d-block">
+                <i class="fa fa-calendar"></i>
+              </span>
+            </span>
+          </div>
+          <div class="form-error">
+            {{ form_errors(form.start_date) }}
+          </div>
+        </div>
+
+        <div class="form-group mb-5">
+          {{ form_label(form.end_date) }}
+          <div class="input-group date" id="datepickerEnd">
+            {{ form_widget(form.end_date) }}
+            <span class="input-group-append">
+              <span class="input-group-text bg-light d-block">
+                <i class="fa fa-calendar"></i>
+              </span>
+            </span>
+          </div>
+          <div class="form-error">
+            {{ form_errors(form.end_date) }}
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-3">
+        {{ form_label(form.reason) }}
+        {{ form_widget(form.reason) }}
+        <div class="form-error">
+          {{ form_errors(form.reason) }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        <div class="form-error">
+          {{ form_errors(form.description) }}
+        </div>
+      </div>
+      <div class="form-group text-center">
+        {% if app.user %}
+        <button type="submit" class="btn btn-success mb-8 mt-4">
+          Enregistrer
+        </button>
+        {% else %}
+        <b> Vous devez vous identifier ou créer un compte</b>
+        <div class="align-center mt-3">
+          <a class="btn btn-success me-5" href="{{ path('app_login') }}"
+            >Connexion
+          </a>
+          <a class="btn btn-success" href="{{ path('app_inscription') }}">
+            Inscription
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div id="calendar"></div>
+
+    {{ form_end(form) }}
+  </div>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="{{ asset('build/js/stay.js') }}"></script>
+</div>
+{% endblock %}

@@ -38,7 +38,9 @@
           {% if (app.user and 'ROLE_ADMIN' not in app.user.getroles()) or not
           app.user %}
           <li class="nav-item">
-            <a class="nav-link mx-2" href="#">Séjours</a>
+            <a class="nav-link mx-2" href="{{ path('app_sejour_new') }}"
+              >Séjours</a
+            >
           </li>
           {% endif %}
           <li class="nav-item">

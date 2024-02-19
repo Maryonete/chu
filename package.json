@@ -20,6 +20,11 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@fullcalendar/core": "^6.1.10",
+        "@fullcalendar/daygrid": "^6.1.10",
+        "@fullcalendar/interaction": "^6.1.10",
+        "@fullcalendar/list": "^6.1.10",
+        "@fullcalendar/timegrid": "^6.1.10",
         "@popperjs/core": "^2.11.8",
         "jquery": "^3.7.1",
         "sass": "^1.71.0",

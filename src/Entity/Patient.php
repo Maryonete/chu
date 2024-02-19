@@ -40,6 +40,14 @@ class Patient
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Stay::class, orphanRemoval: true)]
+    private Collection $stays;
+
+    public function __construct()
+    {
+        $this->stays = new ArrayCollection();
+    }
+
     public function __toString()
     {
         return $this->getUser();
@@ -138,6 +146,35 @@ class Patient
     public function setAdcountry(string $adcountry)
     {
         $this->adcountry = $adcountry;
+
+        return $this;
+    }
+    /**
+     * @return Collection<int, Stay>
+     */
+    public function getStays(): Collection
+    {
+        return $this->stays;
+    }
+
+    public function addStay(Stay $stay): static
+    {
+        if (!$this->stays->contains($stay)) {
+            $this->stays->add($stay);
+            $stay->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStay(Stay $stay): static
+    {
+        if ($this->stays->removeElement($stay)) {
+            // set the owning side to null (unless already changed)
+            if ($stay->getPatient() === $this) {
+                $stay->setPatient(null);
+            }
+        }
 
         return $this;
     }
