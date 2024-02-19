@@ -35,8 +35,27 @@
           médecine interne, pneumologie…).
         </li>
       </ul>
-      <p></p>
+      <p>
+        <b>{{ specialites | length }} spécialités </b>
+      </p>
     </div>
   </div>
+  <section class="services py-5">
+    <div class="container">
+      <h1 class="text-center mb-2">Nos services</h1>
+      <div class="row">
+        {% for spe in specialites %}
+
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <h3 class="card-title">{{ spe.name }}</h3>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}
