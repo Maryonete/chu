@@ -2,23 +2,27 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Patient;
 use App\Entity\Speciality;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class AppFixtures extends Fixture
 {
 
-
     private Generator $faker;
 
+    private UserPasswordHasherInterface $encoder;
 
-    public function __construct()
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->faker = Factory::create('fr_FR');
+        $this->encoder = $encoder;
     }
 
 
@@ -44,6 +48,45 @@ class AppFixtures extends Fixture
             $manager->persist($spe);
         }
 
+        // ADMIN
+        $admin = new User();
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setPassword($this->encoder->hashPassword($admin, 'test'));
+        $admin->setFirstName('Admin');
+        $admin->setLastName('Admin');
+        $admin->setEmail('admin@studi.fr');
+        $manager->persist($admin);
+
+
+        // USER
+        for ($i = 1; $i <= 10; $i++) {
+            $email = $this->faker->email;
+
+            // utilisé pour les tests
+            if ($i == 1) {
+                $email = "john.do@test.fr";
+            }
+
+            $user = new User();
+            $user->setRoles(['ROLE_USER']);
+            // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
+            $user->setPassword($this->encoder->hashPassword($user, 'test'));
+            $user->setFirstName($this->faker->firstName);
+            $user->setLastName($this->faker->lastName);
+            $user->setEmail($email);
+
+
+            // Adresse
+            $patient = new Patient();
+            $patient->setUser($user);
+            $patient->setAdLibelle($this->faker->streetAddress);
+            $patient->setAdCp($this->faker->postcode);
+            // $patient->setAdCountry($this->faker->country);
+            $patient->setAdCountry('FR');
+            $patient->setAdCity($this->faker->city);
+            $manager->persist($user);
+            $manager->persist($patient);
+        }
         $manager->flush();
     }
 }
