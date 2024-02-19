@@ -53,6 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Patient $patient = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Medecin $medecin = null;
+
     public function __toString()
     {
         return $this->getFirstName() . '  ' . $this->getLastName();
@@ -182,6 +185,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->patient = $patient;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of medecin
+     */
+    public function getMedecin(): Medecin
+    {
+        return $this->medecin;
+    }
+
+    /**
+     * Set the value of medecin
+     */
+    public function setMedecin(Medecin $medecin): static
+    {
+        // set the owning side of the relation if necessary
+        if ($medecin->getUser() !== $this) {
+            $medecin->setUser($this);
+        }
+        $this->medecin = $medecin;
 
         return $this;
     }

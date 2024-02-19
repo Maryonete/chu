@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Calendar;
+use App\Entity\Medecin;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * @extends ServiceEntityRepository<Calendar>
@@ -16,33 +19,61 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CalendarRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private DateTime $now;
+    private ParameterBagInterface $parameterBagInterface;
+
+    public function __construct(ManagerRegistry $registry, ParameterBagInterface $parameterBagInterface)
     {
         parent::__construct($registry, Calendar::class);
+        $this->now = new DateTime();
+        $this->parameterBagInterface = $parameterBagInterface;
     }
+    /**
+     * 
+     *
+     * @param DatetimeInterface $sdate : start date
+     * @param DateTimeInterface $edate : end date
+     * @return array
+     */
+    public function countDays($sdate, $edate): array
+    {
+        $dates  = [];
+        for ($i = $sdate; $i < $edate; $i->modify("+1 day")) {
+            $dates[] = $i->format('Y-m-d');
+        }
+        return $dates;
+    }
+    /**
+     * returns table of doctor's unavailable days
+     *
+     * @param Medecin $medecin
+     * @return array
+     */
+    public function getDaysBusy(Medecin $medecin): ?array
+    {
+        $calendarAll =  [];
+        $calendarBusy = [];
 
-//    /**
-//     * @return Calendar[] Returns an array of Calendar objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+        $calendars = $medecin->getCalendars();
 
-//    public function findOneBySomeField($value): ?Calendar
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        foreach ($calendars as $calendar) {
+            if ($this->now > $calendar->getEnd()) {
+                continue;
+            }
+
+            $jourBusy = self::countDays($calendar->getStart(), $calendar->getEnd());
+            foreach ($jourBusy as $date) {
+
+                if (array_key_exists($date, $calendarAll)) {
+                    $calendarAll[$date]++;
+                    if ($calendarAll[$date] > $this->parameterBagInterface->get('medecin_event_limit_day')) {
+                        $calendarBusy[] = $date;
+                    }
+                } else {
+                    $calendarAll[$date] = 1;
+                }
+            }
+        }
+        return $calendarBusy;
+    }
 }

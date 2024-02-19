@@ -30,6 +30,7 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+/tests/Rapport/
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
