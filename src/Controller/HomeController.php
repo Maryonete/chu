@@ -31,6 +31,14 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
     public function index(SpecialityRepository $speRepo): Response
     {
+        if ($this->getUser()) {
+
+            if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+                // return $this->redirectToRoute('admin');
+            } else {
+                return $this->redirectToRoute('app_home_patient');
+            }
+        }
         return $this->render('pages/home.html.twig', [
             'specialites'   =>  $speRepo->findBy([], ['name' => 'ASC']),
 
