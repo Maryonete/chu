@@ -29,9 +29,19 @@ class HomeController extends AbstractController
     //     ]);
     // }
     #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
-    public function index(): Response
+    public function index(SpecialityRepository $speRepo): Response
     {
-        return $this->render('pages/home.html.twig', []);
+        return $this->render('pages/home.html.twig', [
+            'specialites'   =>  $speRepo->findBy([], ['name' => 'ASC']),
+
+        ]);
+    }
+    #[Route('/speciality', name: 'app_speciality_list')]
+    public function speciality_list(SpecialityRepository $speRepo): Response
+    {
+        return $this->render('pages/speciality_list.html.twig', [
+            'specialites' => $speRepo->findBy([], ['name' => 'ASC']),
+        ]);
     }
     /** pages statiques */
     #[Route('/mentions_legales', name: 'app_mentions_legales', methods: ['GET', 'POST'])]

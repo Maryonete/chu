@@ -31,7 +31,9 @@
             >
           </li>
           <li class="nav-item">
-            <a class="nav-link mx-2" href="#">Spécialités</a>
+            <a class="nav-link mx-2" href="{{ path('app_speciality_list') }}"
+              >Spécialités</a
+            >
           </li>
           {% if (app.user and 'ROLE_ADMIN' not in app.user.getroles()) or not
           app.user %}
