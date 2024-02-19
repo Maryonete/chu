@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %} {% block title %}Séjour{% endblock %} {% block
+body %}
+
+<div class="container border border-5 rounded mt-2">
+  <div class="row justify-content-md-center mb-4">
+    <div class="col-8">
+      <h1 class="border-bottom">
+        Séjour {{ stay.reason }} <br />{% if stay.isValidate %} confirmé {% else
+        %} en attente de confirmation {% endif %}
+      </h1>
+
+      <div class="my-3 p-3 bg-body rounded shadow-sm">
+        {% if stay.isValidate and calendar[0].start is defined %}
+        <div class="d-flex text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+              <strong class="text-gray-dark"
+                >Rendez-vous avec le médecin
+              </strong>
+            </div>
+            <span class="d-block">
+              {{ calendar[0].start|date("d/m/Y \à H:i") }}</span
+            >
+          </div>
+        </div>
+        {% endif %}
+        <div class="d-flex text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+              <strong class="text-gray-dark">Entrée</strong>
+            </div>
+            <span class="d-block">
+              {{ stay.startdate|date("d/m/Y") }}
+            </span>
+          </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+              <strong class="text-gray-dark">Sortie</strong>
+            </div>
+            <span class="d-block">
+              {{ stay.enddate|date("d/m/Y") }}
+            </span>
+          </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+              <strong class="text-gray-dark">Spécialité</strong>
+            </div>
+            <span class="d-block">{{ stay.speciality.name }}</span>
+          </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+              <strong class="text-gray-dark">Médecin</strong>
+            </div>
+            <span class="d-block"
+              >{{ stay.medecin.user.lastname }}
+              {{ stay.medecin.user.firstname }}</span
+            >
+          </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+            <div class="d-flex justify-content-between">
+              <strong class="text-gray-dark">Description</strong>
+            </div>
+            <span class="d-block">{{ stay.description }}</span>
+          </div>
+        </div>
+        <div class="text-body-secondary pt-3">
+          <div class="pb-3 mb-0 small border-bottom">
+            <!-- Sejour à venir + confirmé : affiche procédure -->
+            {% if stay.etat == 'avenir' or stay.etat == 'encours' %} {% if
+            stay.isValidate %}
+            <h3 class="mb-4">Procédure séjour à l'hospital</h3>
+            <h4 class="fr-h5">Informations sur l'état de santé</h4>
+            <p>
+              Les informations liées à votre santé vous sont communiquées&nbsp;:
+            </p>
+            <ul class="sp-item-list">
+              <li>Par le médecin responsable de la structure concernée</li>
+              <li>Ou par tout membre du corps médical de l'établissement</li>
+              <li>Ou par le médecin responsable de votre prise en charge.</li>
+            </ul>
+
+            <h4 class="border-top pt-2">Linge et vêtements</h4>
+            <p>
+              Les vêtements personnels ne sont pas fournis par l'hôpital
+              (pyjamas, robe de chambre...), ni les produits de toilette.
+              <br />
+              L'établissement de santé met à disposition le linge de lit et de
+              table.
+            </p>
+
+            <h4 class="border-top pt-2">
+              Visites, repas, accueil téléphonique
+            </h4>
+            <p>
+              L'hôpital porte à votre connaissance les moyens permettant
+              à&nbsp;:
+            </p>
+            <ul class="sp-item-list">
+              <li>
+                Vos proches de connaître les conditions, notamment horaires,
+                dans lesquelles ils peuvent être reçus par les médecins
+              </li>
+              <li>
+                Vous même et votre entourage de connaître les horaires (des
+                repas, de visite, d'accueil téléphonique...).
+              </li>
+            </ul>
+            <p>Ces informations figurent dans le livret d'accueil.</p>
+
+            <h4 class="border-top pt-2">Télévision</h4>
+            <p>
+              Si elle n'est pas déjà installée, il est possible de demander une
+              télévision. Cette prestation peut être gratuite ou payante suivant
+              les établissements.
+            </p>
+            <h4 class="border-top pt-2">En cas de vol dans votre chambre</h4>
+            <p>
+              L'hôpital n'est en principe pas responsable si vous décidez de
+              conserver vos objets.
+            </p>
+            <p>
+              Si vous n'avez pas décidez de garder vos objets, l'hôpital n'est
+              responsable que des objets qui lui ont été confiés.
+            </p>
+            <p>
+              C'est pourquoi il est recommandé de déposer vos objets de valeur
+              (argent, moyens de paiement, papiers d'identité, bijoux...) auprès
+              du service d'admission.
+            </p>
+            <p>Le service vous remettra un reçu.</p>
+            <p>
+              Pour toute réclamation concernant le vol d'un de vos objets de
+              valeur, il faut vous adresser à la direction de l'hôpital pour une
+              demande d'indemnisation.
+            </p>
+            {% else %}
+            <b
+              >Votre dossier est en cours de traitement, nous vous contacterons
+              dés sa soumission</b
+            >
+            {% endif %} {% endif %}
+          </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+          <a href="{{ path('app_home_patient') }}" class="btn"
+            >Retour à la liste</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
