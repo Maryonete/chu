@@ -3,30 +3,73 @@
 namespace App\Controller;
 
 use App\Entity\Medecin;
+use App\Entity\Patient;
 use App\Entity\Speciality;
+use App\Entity\Stay;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Form\PatientEditType;
 use App\Form\StayType;
+use App\Repository\CalendarRepository;
+use App\Repository\PatientRepository;
+use App\Repository\StayRepository;
 use App\Repository\UserRepository;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class PatientController extends AbstractController
 {
-    #[Route('/patient', name: 'app_home_patient')]
-    public function index(): Response
-    {
+    /**
+     * HomePage Patient
+     *
+     * @param PatientRepository $patienRepo
+     * @param StayRepository $sejourRepo
+     * @param Security $security
+     * @param Request $request
+     * @return Response
+     */
+    #[Route('/patient/home', name: 'app_home_patient', methods: 'GET|POST')]
+    public function index(
+        PatientRepository $patienRepo,
+        StayRepository $sejourRepo,
+        Security $security,
+        Request $request
+    ): Response {
+
         if ($this->getUser() and in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             return $this->redirectToRoute('admin');
         }
-        return $this->render('pages/patient/index.html.twig', []);
+
+        // $patient    = $patienRepo->findByUser($security->getUser());
+        $patient    = $patienRepo->findOneBy(['user' => $security->getUser()]);
+        $etat       = $request->get('etat');
+        $sejours    = $sejourRepo->findByPatient($patient->getId(), $etat);
+        $countSejourAll    = $sejourRepo->countStayByPatient($patient->getId());
+
+        $sejourValidate = [];
+        $sejourNoValidate = [];
+
+        foreach ($sejours as $sejour) {
+            /** @var Stay $sejour */
+            if ($sejour->isValidate()) {
+                $sejourValidate[] = $sejour;
+            } else {
+                $sejourNoValidate[] = $sejour;
+            }
+        }
+        return $this->render('pages/patient/index.html.twig', [
+            'sejourValidate'    =>  $sejourValidate,
+            'sejourNoValidate'  =>  $sejourNoValidate,
+            'etat'              =>  $etat,
+            'countSejourAll'    =>  $countSejourAll,
+        ]);
     }
     /**
      * User account Edition
@@ -98,7 +141,24 @@ class PatientController extends AbstractController
             'unan'      =>  $date->modify('+1 year')->format('Y-m-d'),
         ]);
     }
-
+    /**
+     * Show Stay Details
+     */
+    #[Route('/sejour_show/{id<\d+>}', name: 'app_sejour_show', methods: 'GET|POST')]
+    // public function showDetailStay(Stay $stay, CalendarRepository $calendarRepo): Response
+    // {
+    //     return $this->render('pages/patient/stay_show.html.twig', [
+    //         'stay'      => $stay,
+    //         'calendar'  => $calendarRepo->findBy(['stay' => $stay]),
+    //     ]);
+    // }
+    public function showDetailStay(Stay $stay): Response
+    {
+        return $this->render('pages/patient/stay_show.html.twig', [
+            'stay'      => $stay,
+            'calendar'  => [],
+        ]);
+    }
     /**
      * liste medecin en fonction de leur specialite
      * retourne JSon
@@ -114,9 +174,11 @@ class PatientController extends AbstractController
         $columns = array_column($arrayOfMedecins, 'name');
         array_multisort($columns, SORT_ASC, $arrayOfMedecins);
 
+
+
         return $this->json($arrayOfMedecins);
     }
-    // #TODO
+
     #[Route('/{id<\d+>}/notMedecinjson', name: 'dispo_medecin')]
     public function busyMedecin(
         Medecin $medecin,
