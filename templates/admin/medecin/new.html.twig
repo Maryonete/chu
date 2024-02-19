@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %} {% block title %}Création Medecin{% endblock %}
+{% block body %}
+
+<div class="container border border-5 rounded mt-2">
+  <div class="row justify-content-md-center mb-4">
+    <div class="col-8">
+      <h1 class="border-bottom">Création d'un nouveau Médecin</h1>
+
+      {{ form_start(form) }}
+      <div class="form-group">
+        {{ form_label(form.user.lastname) }}
+        {{ form_widget(form.user.lastname) }}
+        <div class="form-error">
+          {{ form_errors(form.user.lastname) }}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form_label(form.user.firstname) }}
+        {{ form_widget(form.user.firstname) }}
+        <div class="form-error">
+          {{ form_errors(form.user.firstname) }}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form_label(form.user.email) }}
+        {{ form_widget(form.user.email) }}
+        <div class="form-error">
+          {{ form_errors(form.user.email) }}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form_label(form.plainPassword) }}
+        {{ form_widget(form.plainPassword) }}
+        <div class="form-error">
+          {{ form_errors(form.plainPassword) }}
+        </div>
+      </div>
+      <div>
+        {{ form_label(form.speciality) }}
+        <ul>
+          {% for i in form.speciality %}
+          <li>{{ form_widget(i) }} {{ form_label(i) }}</li>
+          {% endfor %}
+        </ul>
+        <div class="form-error">
+          {{ form_errors(form.speciality) }}
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn btn-primary">
+          {{ button_label|default('Enregistrer') }}
+        </button>
+      </div>
+      {{ form_end(form) }}
+      <div class="row">
+        <a href="{{ path('admin') }}" class="btn btn-light mt-3"
+          >Retour à la liste</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

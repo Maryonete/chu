@@ -32,7 +32,13 @@
           ></a>
         </td>
         <td class="text-center align-middle">
-          <a href="" alt="add to calendar"
+          <a
+            href="{{
+              path('app_medecin_edit', {
+                id: medecin.id
+              })
+            }}"
+            alt="maj medecin"
             ><i class="fa-solid fa-arrows-rotate"></i
           ></a>
         </td>
