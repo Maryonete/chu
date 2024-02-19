@@ -1,0 +1,10 @@
+lexik_jwt_authentication:
+  secret_key: "%env(resolve:JWT_SECRET_KEY)%" # required for token creation
+  public_key: "%env(resolve:JWT_PUBLIC_KEY)%" # required for token verification
+  pass_phrase: "%env(JWT_PASSPHRASE)%" # required for token creation
+  token_ttl: 86400 # in seconds, default is 86400
+
+  api_platform:
+    check_path: /api/login
+    password_path: password
+    username_path: email
