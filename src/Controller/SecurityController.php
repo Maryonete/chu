@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
+    #[Route(path: '/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
@@ -36,21 +36,23 @@ class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
-    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
-    public function apiLogin(
-        Request $request,
+    // curl -X POST -H "Content-Type: application/json" http://localhost:8000/authentication -d'{"email":"admin-localhost","mot de passe":"123456"}'
+    #[Route('/api/login_check', name: 'api_login', methods: ['GET', 'POST'])]
+    public function loginApi(
         JWTTokenManagerInterface $jwtManager,
-        UserRepository $usersRepository
+        Request $request,
+        UserRepository $userRepository
     ): JsonResponse {
-        // Récupérer les données d'identification envoyées par l'application ElectronJS
+        dd('Symfony : loginApi ! ');
+
         $data = json_decode($request->getContent(), true);
-        $email = $data['username'] ?? null;
+
+        $email = $data['email'] ?? null;
+        dd($email);
+
         $password = $data['password'] ?? null;
 
-        // Trouver l'utilisateur correspondant à l'e-mail
-        $user = $usersRepository->findOneBy(['email' => $email]);
-        //        $passwordHasher = $this->container->get('security.password_hasher');
-        // Vérifier les identifiants de l'utilisateur
+        $user = $userRepository->findOneBy(['email' => $email]);
         if (!$user || !password_verify($password, $user->getPassword())) {
             throw new AuthenticationException('Identifiants invalides');
         }
