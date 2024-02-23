@@ -29,7 +29,7 @@ class ApiController extends AbstractController
         $user = $userRepo->findOneBy(['email' => $email]);
         /** var Medecin $medecin */
         $medecin = $medecinRepository->findByUser($user);
-        dump($medecin);
+        // dump($medecin);
         return new JsonResponse([
             'user_id'   =>  $medecin[0]->getId(),
             'firstName' =>  $medecin[0]->getUser()->getFirstName(),
@@ -53,16 +53,17 @@ class ApiController extends AbstractController
             $flatArray = [];
             foreach ($calendars as $calendar) {
                 $flatArray[] = [
-                    'id' => $calendar->getId(),
-                    'title' => $calendar->getTitle(),
-                    'start' => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
-                    'end' => $calendar->getEnd()->format('Y-m-d H:i:s'), // Formatage de la date de fin
-                    'description' => $calendar->getDescription(),
-                    'medecin_id' => $calendar->getMedecin()->getId(),
+                    'id'            => $calendar->getId(),
+                    'title'         => $calendar->getTitle(),
+                    'speciality'    => $calendar->getStay()->getSpeciality()->getName(),
+                    'start'         => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
+                    'end'           => $calendar->getEnd()->format('Y-m-d H:i:s'), // Formatage de la date de fin
+                    'description'   => $calendar->getDescription(),
+                    'medecin_id'    => $calendar->getMedecin()->getId(),
                 ];
             }
 
-            // dd($flatArray);
+            // dd($calendars);
             $jsonList = $serializer->serialize(
                 $flatArray,
                 'json'

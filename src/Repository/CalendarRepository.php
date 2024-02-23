@@ -28,6 +28,25 @@ class CalendarRepository extends ServiceEntityRepository
         $this->now = new DateTime();
         $this->parameterBagInterface = $parameterBagInterface;
     }
+    // liste des rendez-vous du jour
+    public function findCalendarsByMedecinToday(int $idMedecin): ?array
+    {
+        $currentDate = new \DateTime();
+        $currentDate->setTime(0, 0, 0);
+        $currentDateString = $currentDate->format('Y-m-d H:i:s');
+
+        return $this->createQueryBuilder('c')
+            ->select('c', 's', 'p', 'sp')
+            ->leftjoin('c.stay', 's')
+            ->leftjoin('s.patient', 'p')
+            ->leftjoin('s.speciality', 'sp')
+            ->andWhere('c.medecin = :medecinId')
+            ->andWhere('c.start >= :currentDate')
+            ->setParameter('medecinId', $idMedecin)
+            ->setParameter('currentDate', $currentDateString)
+            ->getQuery()
+            ->getResult();
+    }
     /**
      * 
      *
