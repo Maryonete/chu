@@ -3,8 +3,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\Calendar;
+use App\Entity\Drugs;
 use App\Entity\Medecin;
+use App\Entity\Medication;
 use App\Entity\Patient;
+use App\Entity\Prescription;
 use App\Entity\Speciality;
 use App\Entity\Stay;
 use App\Entity\User;
@@ -35,19 +38,22 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $specialityName = [
+        $specialityData = [
             'Biologie', 'Cardiologie et Maladies Vasculaires',
-            'Chirurgie de l\'Obésité', 'Chirurgie Dentaire', 'Chirurgie Digestive et Viscérale',
-            'Chirurgie maxillo faciale', 'Chirurgie Ophtalmologique', 'Chirurgie ORL', 'Chirurgie Orthopédique',
-            'Chirurgie Pédiatrique', 'Chirurgie Plastique Reconstructrice et Esthétique', 'Chirurgie Urologique',
-            'Chirurgie Vasculaire', 'Explorations Endoscopiques', 'Gastro-entérologie et proctologie',
-            'Institut du pied', 'Médecine et Gérontologie', 'Orthopédie', 'Pneumologie', 'Radiologie',
-            'SOS Calculs Urinaires', 'SOS Genoux', 'Urgences Adulte et Enfant', 'Urgences retine - Ophtalmologie'
+            'Chirurgie Dentaire',
+            'Chirurgie Ophtalmologique',
+            'Chirurgie ORL', 'Chirurgie Orthopédique',
+            'Chirurgie Pédiatrique',
+            'Chirurgie Vasculaire',
+            'Gastro-entérologie et proctologie',
+            'Institut du pied', 'Médecine et Gérontologie',
+            'Orthopédie', 'Pneumologie', 'Radiologie',
+            'Urgences Adulte et Enfant'
         ];
         $this->now = new \DateTime("now");
         // Spécialités
         $listSpe = [];
-        foreach ($specialityName as $namespe) {
+        foreach ($specialityData as $namespe) {
             $spe = new Speciality();
             $spe->setName($namespe)
                 ->setDescription($this->faker->paragraphs(5, true));
@@ -71,10 +77,10 @@ class AppFixtures extends Fixture
             $user->setRoles(['ROLE_MEDECIN']);
             // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
             $user->setPassword($this->encoder->hashPassword($user, 'test'));
-            $user->setFirstName($this->faker->firstName);
-            $user->setLastName($this->faker->lastName);
+            $user->setFirstName($this->faker->firstName());
+            $user->setLastName($this->faker->lastName());
 
-            $user->setEmail($this->faker->email);
+            $user->setEmail($this->faker->email());
             $manager->persist($user);
 
             $medecin = new Medecin();
@@ -92,17 +98,17 @@ class AppFixtures extends Fixture
             $user->setRoles(['ROLE_USER']);
             // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
             $user->setPassword($this->encoder->hashPassword($user, 'test'));
-            $user->setFirstName($this->faker->firstName);
-            $user->setLastName($this->faker->lastName);
-            $user->setEmail($this->faker->email);
+            $user->setFirstName($this->faker->firstName());
+            $user->setLastName($this->faker->lastName());
+            $user->setEmail($this->faker->email());
 
             // Adresse
             $patient = new Patient();
             $patient->setUser($user);
-            $patient->setAdLibelle($this->faker->streetAddress);
-            $patient->setAdCp($this->faker->postcode);
+            $patient->setAdLibelle($this->faker->streetAddress());
+            $patient->setAdCp($this->faker->postcode());
             $patient->setAdCountry('FR');
-            $patient->setAdCity($this->faker->city);
+            $patient->setAdCity($this->faker->city());
             $manager->persist($user);
             $manager->persist($patient);
 
@@ -110,8 +116,8 @@ class AppFixtures extends Fixture
             for ($k = 1; $k <= 4; $k++) {
                 $sejour = new Stay();
                 $sejour->setpatient($patient);
-                $sejour->setReason($this->faker->sentence);
-                $sejour->setDescription($this->faker->paragraph);
+                $sejour->setReason($this->faker->sentence());
+                $sejour->setDescription($this->faker->paragraph());
                 $sejour->setSpeciality($this->faker->randomElement($listSpe));
                 $sejour->setMedecin($this->faker->randomElement($medecins));
 
@@ -141,8 +147,21 @@ class AppFixtures extends Fixture
             }
         }
         $manager->flush();
+        $this->loadDrugs($manager);
         $this->loadMedecinTest($manager);
         $this->loadCalendars($manager);
+    }
+    // Drugs
+    private function loadDrugs(ObjectManager $manager): void
+    {
+        $drugsData = ['Doliprane', 'Peniciline', 'Vitamine', 'Maalox', 'Ibuprofène', 'Amoxicilline'];
+
+        foreach ($drugsData as $drugData) {
+            $drug = new Drugs();
+            $drug->setName($drugData);
+            $manager->persist($drug);
+        }
+        $manager->flush();
     }
     // Calendar : seulement pour le premier medecin
     private function loadCalendars(ObjectManager $manager): void
@@ -151,11 +170,12 @@ class AppFixtures extends Fixture
         $medecinStays = $manager->getRepository(Stay::class)->findBy([
             'medecin'      => $userMedecin->getMedecin(),
         ]);
-
+        // Nombre d'heures à ajouter
+        $heure = 0;
+        $minutes = 0;
         foreach ($medecinStays as $stay) {
 
             $stayStartDate = $stay->getStartDate();
-            dump($stayStartDate);
             $stayEndDate    = $stay->getEndDate();
 
             // Créer une instance de Calendar
@@ -168,8 +188,11 @@ class AppFixtures extends Fixture
             // Définissez les autres attributs du Calendar en fonction des attributs du séjour
             $calendar->setTitle($stay->getpatient()->getUser()->getFirstname() . ' ' . $stay->getpatient()->getUser()->getLastname());
             $calendar->setDescription($stay->getReason());
-            $calendar->setStart($stayStartDate);
-            $calendar->setEnd($stayEndDate);
+            $calendar->setStart($stayStartDate->modify('+' . (9 + $heure) . ' hours'));
+            $calendar->setEnd($stayEndDate->modify('+' . (14 + $heure) . ' hours'));
+            if ($stayStartDate >= $this->now) {
+                $heure++;
+            }
 
             // Persistez l'instance de Calendar
             $manager->persist($calendar);
@@ -195,7 +218,6 @@ class AppFixtures extends Fixture
         // 2. ajout 6 specialités
         $speList = $manager->getRepository(Speciality::class)->findBy([], null, 6);
 
-        // dump($spe);
         $listeSpe = [];
         foreach ($speList as $spe) {
             $medecin->addSpeciality($spe);
@@ -233,39 +255,60 @@ class AppFixtures extends Fixture
             for ($k = 1; $k <= 4; $k++) {
                 $sejour = new Stay();
                 $sejour->setpatient($patient);
-                $sejour->setReason($this->faker->sentence);
-                $sejour->setDescription($this->faker->paragraph);
+                $sejour->setReason($this->faker->sentence());
+                $sejour->setDescription($this->faker->paragraph());
                 $sejour->setSpeciality($this->faker->randomElement($listeSpe));
                 $sejour->setMedecin($medecin);
-
 
                 // on enregistre au moins 1 séjours à venir, 2 passés et un en cours
                 $dateNow = clone $this->now;
                 switch ($k) {
                     case 1:
-                        $dateA = $dateNow;
-                        $dateB = $dateNow->modify('+1 week');
+                        $dateA = clone $dateNow;
+                        $dateB = clone $dateNow->modify('+1 week');
                         $sejour->setValidate(true);
                         break;
                     case 2:
-                        $dateA = $dateNow->modify('-1 year');
-                        $dateB = $dateNow->modify('-11 months');
+                        $dateA = clone $dateNow->modify('-1 year');
+                        $dateB = clone $dateNow->modify('-11 months');
                         break;
                     case 3:
-                        $dateA = $dateNow->modify('-10 months');
-                        $dateB = $dateNow->modify('-9 months');
+                        $dateA = clone $dateNow->modify('-10 months');
+                        $dateB = clone $dateNow->modify('-9 months');
                         break;
                     default:
-                        $dateA = $dateNow->modify('+1 month');
-                        $dateB = $dateNow->modify('+6 weeks');
+                        $dateA = clone $dateNow->modify('+1 month');
+                        $dateB = clone $dateNow->modify('+6 weeks');
                         $sejour->setValidate(true);
                         break;
                 }
 
-                $sejour->setStartDate($dateA);
-                $sejour->setEndDate($dateB);
-
+                $sejour->setStartDate($dateA->setTime(0, 0, 0));
+                $sejour->setEndDate($dateB->setTime(0, 0, 0));
                 $manager->persist($sejour);
+
+                // 4. ajout des prescriptions : 1 par patient
+                $drugsList = $manager->getRepository(Drugs::class)->findBy([], null, 3);
+                $nbJour = rand(1, 14);
+                $prescription = new Prescription();
+                $dateNow = clone $this->now;
+                $dateB = clone $dateNow->modify('+' . $nbJour . ' day');
+                $prescription->setStartDate($this->now);
+                $prescription->setEndDate($dateB);
+                $prescription->setPatient($patient);
+                $prescription->setMedecin($medecin);
+
+
+                // Medicament de la prescription
+                foreach ($drugsList as $drug) {
+                    $medication = new Medication();
+                    $medication->addDrug($drug);
+                    $medication->setDosage($this->faker->sentence());
+                    $manager->persist($medication);
+
+                    $prescription->addMedication($medication);
+                }
+                $manager->persist($prescription);
             }
         }
 

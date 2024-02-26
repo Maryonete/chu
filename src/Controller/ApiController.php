@@ -49,13 +49,14 @@ class ApiController extends AbstractController
         $id = $request->get('id');
 
         try {
-            $calendars = $calendarRepo->findCalendarsByMedecinToday($id);
+            $calendars = $calendarRepo->findPatientsOfTodayByMedecin($id);
             $flatArray = [];
             foreach ($calendars as $calendar) {
                 $flatArray[] = [
                     'id'            => $calendar->getId(),
                     'title'         => $calendar->getTitle(),
                     'speciality'    => $calendar->getStay()->getSpeciality()->getName(),
+                    'reason'        => $calendar->getStay()->getReason(),
                     'start'         => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
                     'end'           => $calendar->getEnd()->format('Y-m-d H:i:s'), // Formatage de la date de fin
                     'description'   => $calendar->getDescription(),

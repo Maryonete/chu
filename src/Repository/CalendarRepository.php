@@ -29,11 +29,17 @@ class CalendarRepository extends ServiceEntityRepository
         $this->parameterBagInterface = $parameterBagInterface;
     }
     // liste des rendez-vous du jour
-    public function findCalendarsByMedecinToday(int $idMedecin): ?array
+    public function findPatientsOfTodayByMedecin(int $idMedecin): ?array
     {
-        $currentDate = new \DateTime();
-        $currentDate->setTime(0, 0, 0);
-        $currentDateString = $currentDate->format('Y-m-d H:i:s');
+        // Date du jour
+        $today = new \DateTime('today');
+
+        // Définir les bornes de la journée actuelle
+        $startOfDay = clone $today;
+        $startOfDay->setTime(0, 0, 0); // Début de la journée (00:00:00)
+
+        $endOfDay = clone $today;
+        $endOfDay->setTime(23, 59, 59); // Fin de la journée (23:59:59)
 
         return $this->createQueryBuilder('c')
             ->select('c', 's', 'p', 'sp')
@@ -41,9 +47,10 @@ class CalendarRepository extends ServiceEntityRepository
             ->leftjoin('s.patient', 'p')
             ->leftjoin('s.speciality', 'sp')
             ->andWhere('c.medecin = :medecinId')
-            ->andWhere('c.start >= :currentDate')
+            ->andWhere('c.start BETWEEN :startOfDay AND :endOfDay')
             ->setParameter('medecinId', $idMedecin)
-            ->setParameter('currentDate', $currentDateString)
+            ->setParameter('startOfDay', $startOfDay)
+            ->setParameter('endOfDay', $endOfDay)
             ->getQuery()
             ->getResult();
     }

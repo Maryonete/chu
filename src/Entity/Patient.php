@@ -43,9 +43,17 @@ class Patient
     #[ORM\OneToMany(mappedBy: 'patient', targetEntity: Stay::class, orphanRemoval: true)]
     private Collection $stays;
 
+    #[ORM\OneToMany(targetEntity: Prescription::class, mappedBy: 'patient')]
+    private Collection $prescriptions;
+
+    #[ORM\OneToMany(targetEntity: Opinions::class, mappedBy: 'patient')]
+    private Collection $opinions;
+
     public function __construct()
     {
         $this->stays = new ArrayCollection();
+        $this->prescriptions = new ArrayCollection();
+        $this->opinions = new ArrayCollection();
     }
 
     // public function __toString()
@@ -173,6 +181,66 @@ class Patient
             // set the owning side to null (unless already changed)
             if ($stay->getPatient() === $this) {
                 $stay->setPatient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Prescription>
+     */
+    public function getPrescriptions(): Collection
+    {
+        return $this->prescriptions;
+    }
+
+    public function addPrescription(Prescription $prescription): static
+    {
+        if (!$this->prescriptions->contains($prescription)) {
+            $this->prescriptions->add($prescription);
+            $prescription->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrescription(Prescription $prescription): static
+    {
+        if ($this->prescriptions->removeElement($prescription)) {
+            // set the owning side to null (unless already changed)
+            if ($prescription->getPatient() === $this) {
+                $prescription->setPatient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Opinions>
+     */
+    public function getOpinions(): Collection
+    {
+        return $this->opinions;
+    }
+
+    public function addOpinion(Opinions $opinion): static
+    {
+        if (!$this->opinions->contains($opinion)) {
+            $this->opinions->add($opinion);
+            $opinion->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOpinion(Opinions $opinion): static
+    {
+        if ($this->opinions->removeElement($opinion)) {
+            // set the owning side to null (unless already changed)
+            if ($opinion->getPatient() === $this) {
+                $opinion->setPatient(null);
             }
         }
 
