@@ -18,7 +18,7 @@ class Medication
     #[ORM\Column(length: 255)]
     private ?string $dosage = null;
 
-    #[ORM\ManyToMany(targetEntity: drugs::class, inversedBy: 'medications')]
+    #[ORM\ManyToMany(targetEntity: Drugs::class, inversedBy: 'medications')]
     private Collection $drug;
 
     #[ORM\ManyToMany(targetEntity: Prescription::class, inversedBy: 'medications')]
@@ -48,14 +48,14 @@ class Medication
     }
 
     /**
-     * @return Collection<int, drugs>
+     * @return Collection<int, Drugs>
      */
     public function getDrug(): Collection
     {
         return $this->drug;
     }
 
-    public function addDrug(drugs $drug): static
+    public function addDrug(Drugs $drug): static
     {
         if (!$this->drug->contains($drug)) {
             $this->drug->add($drug);
@@ -64,7 +64,7 @@ class Medication
         return $this;
     }
 
-    public function removeDrug(drugs $drug): static
+    public function removeDrug(Drugs $drug): static
     {
         $this->drug->removeElement($drug);
 

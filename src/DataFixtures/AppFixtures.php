@@ -6,6 +6,7 @@ use App\Entity\Calendar;
 use App\Entity\Drugs;
 use App\Entity\Medecin;
 use App\Entity\Medication;
+use App\Entity\Opinions;
 use App\Entity\Patient;
 use App\Entity\Prescription;
 use App\Entity\Speciality;
@@ -309,6 +310,17 @@ class AppFixtures extends Fixture
                     $prescription->addMedication($medication);
                 }
                 $manager->persist($prescription);
+
+                // 5. ajout des avis
+                $nbJour = rand(1, 14);
+                $dateNow = clone $this->now;
+                $opinion = new Opinions();
+                $opinion->setPatient($patient);
+                $opinion->setMedecin($medecin);
+                $opinion->setTitle($this->faker->sentence());
+                $opinion->setDescription($this->faker->paragraph());
+                $opinion->setDate(clone $dateNow->modify('+' . $nbJour . ' day'));
+                $manager->persist($opinion);
             }
         }
 

@@ -37,7 +37,7 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
     // curl -X POST -H "Content-Type: application/json" http://localhost:8000/api/login_check -d'{"email":"admin-localhost","mot de passe":"123456"}'
-    #[Route('/api/login_check', name: 'api_login_check', methods: ['POST'])]
+    #[Route('/api/login_check', name: 'api_login_check', methods: ['GET', 'POST'])]
     public function loginApi(
         JWTTokenManagerInterface $jwtManager,
         Request $request,

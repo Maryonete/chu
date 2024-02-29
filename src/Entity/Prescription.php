@@ -7,13 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: PrescriptionRepository::class)]
 class Prescription
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -22,23 +23,23 @@ class Prescription
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\ManyToOne(inversedBy: 'prescriptions')]
+    #[ORM\ManyToOne(targetEntity: Medecin::class, inversedBy: 'prescriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?medecin $medecin = null;
+    #[Ignore]
+    private ?Medecin $medecin = null;
 
-    #[ORM\ManyToOne(inversedBy: 'prescriptions')]
+    #[ORM\ManyToOne(targetEntity: Patient::class, inversedBy: 'prescriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?patient $patient = null;
+    #[Ignore]
+    private ?Patient $patient = null;
 
-    #[ORM\ManyToMany(targetEntity: Medication::class, mappedBy: 'prescription')]
+    #[ORM\ManyToMany(targetEntity: Medication::class, mappedBy: 'prescriptions')]
     private Collection $medications;
 
     public function __construct()
     {
         $this->medications = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -50,7 +51,7 @@ class Prescription
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): static
+    public function setStartDate(?\DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
@@ -62,32 +63,31 @@ class Prescription
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): static
+    public function setEndDate(?\DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
 
         return $this;
     }
 
-
-    public function getMedecin(): ?medecin
+    public function getMedecin(): ?Medecin
     {
         return $this->medecin;
     }
 
-    public function setMedecin(?medecin $medecin): static
+    public function setMedecin(?Medecin $medecin): self
     {
         $this->medecin = $medecin;
 
         return $this;
     }
 
-    public function getPatient(): ?patient
+    public function getPatient(): ?Patient
     {
         return $this->patient;
     }
 
-    public function setPatient(?patient $patient): static
+    public function setPatient(?Patient $patient): self
     {
         $this->patient = $patient;
 
@@ -102,17 +102,17 @@ class Prescription
         return $this->medications;
     }
 
-    public function addMedication(Medication $medication): static
+    public function addMedication(Medication $medication): self
     {
         if (!$this->medications->contains($medication)) {
-            $this->medications->add($medication);
+            $this->medications[] = $medication;
             $medication->addPrescription($this);
         }
 
         return $this;
     }
 
-    public function removeMedication(Medication $medication): static
+    public function removeMedication(Medication $medication): self
     {
         if ($this->medications->removeElement($medication)) {
             $medication->removePrescription($this);

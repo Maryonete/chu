@@ -157,8 +157,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
           var event = $.grep(allEvents, function (v) {
             var start = v.start.toISOString().slice(0, 10);
-            var end = v.end.toISOString().slice(0, 10);
-
+            var end;
+            if (v.end) {
+              end = v.end.toISOString().slice(0, 10);
+            }
             if (start <= newD && newD <= end) {
               nb++;
             }

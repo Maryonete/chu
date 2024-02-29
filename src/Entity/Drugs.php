@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource]
+#[ORM\Table(name: 'drugs')]
 #[ORM\Entity(repositoryClass: DrugsRepository::class)]
 class Drugs
 {

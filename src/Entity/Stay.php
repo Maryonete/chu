@@ -64,8 +64,8 @@ class Stay
             "etat"  => $this->getEtat(),
             "description" => $this->getDescription(),
             "backgroundColor" => $color,
-            "title" => $this->getpatient()->getUser()->getFirstname() .
-                " " . $this->getpatient()->getUser()->getLastname(),
+            "title" => $this->getPatient()->getUser()->getFirstname() .
+                " " . $this->getPatient()->getUser()->getLastname(),
         ];
     }
     public function getId(): ?int
@@ -176,12 +176,12 @@ class Stay
     }
 
 
-    public function getpatient(): ?Patient
+    public function getPatient(): ?Patient
     {
         return $this->patient;
     }
 
-    public function setpatient(?Patient $patient): static
+    public function setPatient(?Patient $patient): static
     {
         $this->patient = $patient;
 

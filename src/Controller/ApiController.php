@@ -55,6 +55,7 @@ class ApiController extends AbstractController
                 $flatArray[] = [
                     'id'            => $calendar->getId(),
                     'title'         => $calendar->getTitle(),
+                    'patient_id'       =>  $calendar->getStay()->getPatient()->getId(),
                     'speciality'    => $calendar->getStay()->getSpeciality()->getName(),
                     'reason'        => $calendar->getStay()->getReason(),
                     'start'         => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
@@ -63,8 +64,7 @@ class ApiController extends AbstractController
                     'medecin_id'    => $calendar->getMedecin()->getId(),
                 ];
             }
-
-            // dd($calendars);
+            // dd($flatArray);
             $jsonList = $serializer->serialize(
                 $flatArray,
                 'json'
