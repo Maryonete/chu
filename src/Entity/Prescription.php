@@ -25,15 +25,13 @@ class Prescription
 
     #[ORM\ManyToOne(targetEntity: Medecin::class, inversedBy: 'prescriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Ignore]
     private ?Medecin $medecin = null;
 
     #[ORM\ManyToOne(targetEntity: Patient::class, inversedBy: 'prescriptions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Ignore]
     private ?Patient $patient = null;
 
-    #[ORM\ManyToMany(targetEntity: Medication::class, mappedBy: 'prescriptions')]
+    #[ORM\ManyToMany(targetEntity: Medication::class, mappedBy: 'prescription')]
     private Collection $medications;
 
     public function __construct()
@@ -106,16 +104,7 @@ class Prescription
     {
         if (!$this->medications->contains($medication)) {
             $this->medications[] = $medication;
-            $medication->addPrescription($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMedication(Medication $medication): self
-    {
-        if ($this->medications->removeElement($medication)) {
-            $medication->removePrescription($this);
+            $medication->setPrescription($this);
         }
 
         return $this;

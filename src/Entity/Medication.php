@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\MedicationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MedicationRepository::class)]
@@ -18,17 +16,13 @@ class Medication
     #[ORM\Column(length: 255)]
     private ?string $dosage = null;
 
-    #[ORM\ManyToMany(targetEntity: Drugs::class, inversedBy: 'medications')]
-    private Collection $drug;
+    #[ORM\ManyToOne(targetEntity: Drugs::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Drugs $drug = null;
 
-    #[ORM\ManyToMany(targetEntity: Prescription::class, inversedBy: 'medications')]
-    private Collection $prescription;
-
-    public function __construct()
-    {
-        $this->drug = new ArrayCollection();
-        $this->prescription = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(targetEntity: Prescription::class, inversedBy: 'medications')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $prescription;
 
     public function getId(): ?int
     {
@@ -40,57 +34,33 @@ class Medication
         return $this->dosage;
     }
 
-    public function setDosage(string $dosage): static
+    public function setDosage(string $dosage): self
     {
         $this->dosage = $dosage;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Drugs>
-     */
-    public function getDrug(): Collection
+    public function getDrug(): ?Drugs
     {
         return $this->drug;
     }
 
-    public function addDrug(Drugs $drug): static
+    public function setDrug(?Drugs $drug): self
     {
-        if (!$this->drug->contains($drug)) {
-            $this->drug->add($drug);
-        }
+        $this->drug = $drug;
 
         return $this;
     }
 
-    public function removeDrug(Drugs $drug): static
-    {
-        $this->drug->removeElement($drug);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Prescription>
-     */
-    public function getPrescription(): Collection
+    public function getPrescription(): ?Prescription
     {
         return $this->prescription;
     }
 
-    public function addPrescription(Prescription $prescription): static
+    public function setPrescription(?Prescription $prescription): self
     {
-        if (!$this->prescription->contains($prescription)) {
-            $this->prescription->add($prescription);
-        }
-
-        return $this;
-    }
-
-    public function removePrescription(Prescription $prescription): static
-    {
-        $this->prescription->removeElement($prescription);
+        $this->prescription = $prescription;
 
         return $this;
     }

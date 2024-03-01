@@ -43,8 +43,6 @@ class SecurityController extends AbstractController
         Request $request,
         UserRepository $userRepository
     ): JsonResponse {
-        dd('Symfony : loginApi ! ');
-
         $data = json_decode($request->getContent(), true);
 
         $email = $data['username'] ?? null;

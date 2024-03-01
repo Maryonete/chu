@@ -303,12 +303,14 @@ class AppFixtures extends Fixture
                 // Medicament de la prescription
                 foreach ($drugsList as $drug) {
                     $medication = new Medication();
-                    $medication->addDrug($drug);
+                    $medication->setDrug($drug); // Utilisation de setDrug au lieu de addDrug
                     $medication->setDosage($this->faker->sentence());
                     $manager->persist($medication);
 
+                    // Ajout de la médication à la prescription
                     $prescription->addMedication($medication);
                 }
+
                 $manager->persist($prescription);
 
                 // 5. ajout des avis
