@@ -2,10 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Medication;
+use App\Entity\Opinions;
+use App\Entity\Prescription;
 use App\Repository\CalendarRepository;
 use App\Repository\DrugsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\MedecinRepository;
+use App\Repository\OpinionsRepository;
 use App\Repository\PatientRepository;
 use App\Repository\PrescriptionRepository;
 use App\Repository\StayRepository;
@@ -117,37 +121,53 @@ class ApiController extends AbstractController
     /**
      * Liste des patients du docteurs
      */
-    #[Route('/api/getPrescriptionPatients/{id<\d+>}', name: 'api_get_prescription_patient', methods: ['GET', 'POST'])]
+    #[Route('/api/getPrescriptionPatients', name: 'api_get_prescription_patient', methods: ['GET', 'POST'])]
     public function getPrescriptionPatient(
         Request $request,
         SerializerInterface $serializer,
+        MedecinRepository $medecinRepo,
+        PatientRepository $patientRepo,
         PrescriptionRepository $prescriptionRepo
     ): JsonResponse {
 
-        $id = $request->get('id');
+        $data = json_decode($request->getContent(), true);
+
+        // Vérifier si les données sont valides
+        if (!$data) {
+            return new JsonResponse(['error' => 'données invalide'], 400);
+        }
+
+        if (!isset($data['medecin_id']) || !isset($data['patient_id'])) {
+            return new JsonResponse(['error' => '[GET] Opinions data incompletes'], 400);
+        }
 
         try {
-            $prescriptions = $prescriptionRepo->findAllPrescriptionByPatient($id);
+            $prescriptions = $prescriptionRepo->findBy([
+                'medecin' => $medecinRepo->find($data['medecin_id']),
+                'patient' => $patientRepo->find($data['patient_id']),
+            ]);
+
             $flatArray = [];
 
             foreach ($prescriptions as $prescription) {
                 $medicationsInfo = [];
+                $medications = $prescription->getMedications();
+                /** @var Medication $medication */
+                foreach ($medications as $medication) {
 
-                foreach ($prescription->getMedications() as $medication) {
                     $medicationsInfo[] = [
                         'dosage'    => $medication->getDosage(),
                         'drug'      => $medication->getDrug()->getName(),
                     ];
                 }
                 $flatArray[] = [
-                    'id'    => $prescription->getId(),
-                    'start' => $prescription->getStartDate()->format('Y-m-d'),
-                    'end'   => $prescription->getEndDate()->format('Y-m-d'),
-                    'medications' => $medicationsInfo,
+                    'id'            => $prescription->getId(),
+                    'start'         => $prescription->getStartDate()->format('Y-m-d'),
+                    'end'           => $prescription->getEndDate()->format('Y-m-d'),
+                    // 'medications'   => $medicationsInfo,
                 ];
             }
 
-            // dd($flatArray);
             $jsonList = $serializer->serialize(
                 $flatArray,
                 'json'
@@ -155,7 +175,10 @@ class ApiController extends AbstractController
 
             return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => '[getPrescriptionPatient ' . $id . '] Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                ['error' => '[getPrescriptionPatient patient : ' . $data['patient_id'] . ' - medecin: ' . $data['medecin_id'] . '] Une erreur s est produite : ' . $e->getMessage()],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
     /**
@@ -196,6 +219,9 @@ class ApiController extends AbstractController
     ): JsonResponse {
 
         $data = json_decode($request->getContent(), true);
+        if (!isset($data['prescriptionId'])) {
+            return new JsonResponse(['error' => '[SET] Prescription end date incompletes'], 400);
+        }
         $prescriptionId = $data['prescriptionId'] ?? null;
 
         $prescription = $prescriptionRepo->find($prescriptionId);
@@ -209,6 +235,169 @@ class ApiController extends AbstractController
         $newEndDate = new DateTime($newEndDateString);
         $prescription->setEndDate($newEndDate);
         $manager->persist($prescription);
+        $manager->flush();
+
+        return new JsonResponse('', Response::HTTP_OK, [], true);
+    }
+    /**
+     * création d'une prescription
+     */
+    #[Route('/api/addPrescription', name: 'api_add_prescription', methods: ['POST'])]
+    public function addPrescription(
+        Request $request,
+        EntityManagerInterface $manager,
+        DrugsRepository $drugsRepository,
+        MedecinRepository $medecinRepo,
+        PatientRepository $patientRepo,
+        PrescriptionRepository $prescriptionRepo,
+    ): JsonResponse {
+
+        $data = json_decode($request->getContent(), true);
+
+        // Vérifier si les données sont valides
+        if (!$data) {
+            return new JsonResponse(['error' => 'Prescription invalide'], 400);
+        }
+        if (!isset($data['medecin_id']) || !isset($data['patient_id'])) {
+            return new JsonResponse(['error' => '[ADD] Prescription data incompletes'], 400);
+        }
+        // Vérifier si la prescription existe déjà
+        $existingPrescription = $prescriptionRepo->findBy([
+            'startDate' => new \DateTime($data['startDate']),
+            'endDate' => new \DateTime($data['endDate']),
+            'medecin' => $medecinRepo->find($data['medecin_id']),
+            'patient' => $patientRepo->find($data['patient_id']),
+        ]);
+
+        if ($existingPrescription) {
+            // Prescription déjà existante, renvoyer une erreur
+            return new JsonResponse(['error' => 'Prescription already exists'], Response::HTTP_CONFLICT);
+        }
+        $prescription = new Prescription();
+        $prescription->setStartDate(new \DateTime($data['startDate']));
+        $prescription->setEndDate(new \DateTime($data['endDate']));
+        $prescription->setMedecin($medecinRepo->find($data['medecin_id']));
+        $prescription->setPatient($patientRepo->find($data['patient_id']));
+
+
+        // Ajouter les médicaments à la prescription
+        foreach ($data['medications'] as $medicationData) {
+            // Créer une nouvelle entité Medication pour chaque médicament
+            $medication = new Medication();
+            $medication->setDrug($drugsRepository->find($medicationData['drugId']));
+            $medication->setDosage(filter_var($medicationData['dosage'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+
+            // Associer le médicament à la prescription
+            $medication->setPrescription($prescription);
+
+            // Ajouter le médicament à la collection de médicaments de la prescription
+            $prescription->addMedication($medication);
+
+            // Enregistrer le médicament en base de données
+            $manager->persist($medication);
+        }
+
+        $manager->persist($prescription);
+        $manager->flush();
+
+        return new JsonResponse('', Response::HTTP_OK, [], true);
+    }
+    /**
+     * Liste des avis sur un patients en fonction d'un docteur
+     */
+    #[Route('/api/getOpinionsPatient', name: 'api_get_opinions_patient', methods: ['GET', 'POST'])]
+    public function getOpinionsPatient(
+        Request $request,
+        OpinionsRepository $opinionRepo,
+        MedecinRepository $medecinRepo,
+        PatientRepository $patientRepo,
+        SerializerInterface $serializer
+    ): JsonResponse {
+
+        $data = json_decode($request->getContent(), true);
+
+        // Vérifier si les données sont valides
+        if (!$data) {
+            return new JsonResponse(['error' => 'données invalide'], 400);
+        }
+
+        if (!isset($data['medecin_id']) || !isset($data['patient_id'])) {
+            return new JsonResponse(['error' => '[GET] Opinions data incompletes'], 400);
+        }
+        try {
+            $opinions = $opinionRepo->findBy([
+                'medecin' => $medecinRepo->find($data['medecin_id']),
+                'patient' => $patientRepo->find($data['patient_id']),
+            ]);
+            $flatArray = [];
+
+            foreach ($opinions as $opinion) {
+
+                $flatArray[] = [
+                    'id'            => $opinion->getId(),
+                    'title'         => $opinion->getTitle(),
+                    'description'   => $opinion->getDescription(),
+                    'date'          => $opinion->getDate()->format('Y-m-d'),
+                ];
+            }
+            $jsonList = $serializer->serialize(
+                $flatArray,
+                'json'
+            );
+
+            return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => '[getOpinionsPatient ] Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return new JsonResponse([], Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * création d'un avis
+     */
+    #[Route('/api/addOpinion', name: 'api_add_opinion', methods: ['POST'])]
+    public function addOpinion(
+        Request $request,
+        EntityManagerInterface $manager,
+        OpinionsRepository $opinionRepo,
+        MedecinRepository $medecinRepo,
+        PatientRepository $patientRepo,
+    ): JsonResponse {
+
+        $data = json_decode($request->getContent(), true);
+
+        // Vérifier si les données sont valides
+        if (!$data) {
+            return new JsonResponse(['error' => 'Opinions data invalide'], 400);
+        }
+        // Validation des données (assurez-vous que les champs requis sont remplis)
+        if (
+            !isset($data['medecin_id']) ||
+            !isset($data['patient_id']) ||
+            !isset($data['description']) ||
+            !isset($data['title'])
+        ) {
+            return new JsonResponse(['error' => 'Opinions data incompletes'], 400);
+        }
+        // Vérifier si l'avis existe déjà
+        $existingOpinion = $opinionRepo->findBy([
+            'date'      => new \DateTime($data['date']),
+            'medecin'   => $medecinRepo->find($data['medecin_id']),
+            'patient'   => $patientRepo->find($data['patient_id']),
+            'title'     => $data['title'],
+        ]);
+
+        if ($existingOpinion) {
+            // Prescription déjà existante, renvoyer une erreur
+            return new JsonResponse(['error' => 'Opinion already exists'], Response::HTTP_CONFLICT);
+        }
+        $opinion = new Opinions();
+        $opinion->setDate(new \DateTime($data['date']));
+        $opinion->setDescription(filter_var($data['description'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $opinion->setTitle(filter_var($data['title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $opinion->setMedecin($medecinRepo->find($data['medecin_id']));
+        $opinion->setPatient($patientRepo->find($data['patient_id']));
+        $manager->persist($opinion);
         $manager->flush();
 
         return new JsonResponse('', Response::HTTP_OK, [], true);

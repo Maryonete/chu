@@ -31,7 +31,7 @@ class Prescription
     #[ORM\JoinColumn(nullable: false)]
     private ?Patient $patient = null;
 
-    #[ORM\ManyToMany(targetEntity: Medication::class, mappedBy: 'prescription')]
+    #[ORM\OneToMany(targetEntity: Medication::class, mappedBy: 'prescription')]
     private Collection $medications;
 
     public function __construct()
