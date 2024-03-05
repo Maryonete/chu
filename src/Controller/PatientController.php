@@ -145,20 +145,14 @@ class PatientController extends AbstractController
      * Show Stay Details
      */
     #[Route('/sejour_show/{id<\d+>}', name: 'app_sejour_show', methods: 'GET|POST')]
-    // public function showDetailStay(Stay $stay, CalendarRepository $calendarRepo): Response
-    // {
-    //     return $this->render('pages/patient/stay_show.html.twig', [
-    //         'stay'      => $stay,
-    //         'calendar'  => $calendarRepo->findBy(['stay' => $stay]),
-    //     ]);
-    // }
-    public function showDetailStay(Stay $stay): Response
+    public function showDetailStay(Stay $stay, CalendarRepository $calendarRepo): Response
     {
         return $this->render('pages/patient/stay_show.html.twig', [
             'stay'      => $stay,
-            'calendar'  => [],
+            'calendar'  => $calendarRepo->findBy(['stay' => $stay]),
         ]);
     }
+
     /**
      * liste medecin en fonction de leur specialite
      * retourne JSon

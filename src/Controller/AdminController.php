@@ -42,9 +42,6 @@ class AdminController extends AbstractController
     #[Route('/', name: 'admin')]
     public function index(): Response
     {
-
-        dump($GLOBALS);
-
         $listeStayWait = $this->stayRepo->findBy(['validate' => 0], ['start_date' => 'ASC']);
         $listeMedecin = $this->medecinRepo->findAll();
         return $this->render('admin/index.html.twig', [
