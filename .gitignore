@@ -30,6 +30,7 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+/tests/Rapport/
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
@@ -45,3 +46,7 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

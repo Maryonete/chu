@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %} {% block title %}Espace Patient{% endblock %} {%
+block body %}
+<div class="container">
+  {% for message in app.flashes('success') %}
+  <div class="alert alert-success mt-4">
+    {{ message }}
+  </div>
+  {% endfor %}
+
+  <h1>Espace patient CHU SoigneMoi</h1>
+  <div class="row justify-content-md-center mb-4">
+    <div class="col-4">
+      <a
+        href="{{ path('app_sejour_new') }}"
+        class="btn btn-success mt-1"
+        alt="prendre un rendez-vous"
+      >
+        Enregistrer un nouveau séjour
+      </a>
+    </div>
+    <div class="col-4">
+      <a
+        href="{{ path('app_patient_edit') }}"
+        class="btn btn-success mt-1"
+        alt="Mettre à jour vos données"
+      >
+        Mettre à jour vos données
+      </a>
+    </div>
+  </div>
+</div>
+{% if countSejourAll>0 %}
+<div class="container border border-5 rounded bg-light">
+  <div class="row justify-content-md-center mx-4 my-4">
+    <div class="col"><span class="fw-bold">Mes séjours :</span></div>
+    <div class="col {% if etat == '' %} selectItem {% endif %}">
+      <a href="{{ path('app_home_patient') }}">
+        <i class="fa-solid fa-square"></i> Tous</a
+      >
+    </div>
+    <div class="col{% if etat == 'encours' %} selectItem {% endif %}">
+      <a href="{{ path('app_home_patient', { etat: 'encours' }) }}"
+        ><i class="fa-solid fa-square encours"></i> en cours
+      </a>
+    </div>
+    <div class="col{% if etat == 'avenir' %} selectItem {% endif %}">
+      <a href="{{ path('app_home_patient', { etat: 'avenir' }) }}"
+        ><i class="fa-solid fa-square avenir"></i> à venir</a
+      >
+    </div>
+    <div class="col{% if etat == 'passe' %} selectItem {% endif %}">
+      <a href="{{ path('app_home_patient', { etat: 'passe' }) }}">
+        <i class="fa-solid fa-square passe"></i> terminés</a
+      >
+    </div>
+  </div>
+</div>
+{% if sejourValidate|length>0 %}
+<div class="container border border-5 rounded mt-2 bg-light">
+  <div class="row justify-content-md-center mx-4 my-4">
+    {% include 'pages/patient/_liste_stay.html.twig' with {'sejours':
+    sejourValidate, 'titre':'Mes Séjours programmés', 'validate' : 1} %}
+  </div>
+</div>
+{% endif %} {% if sejourNoValidate|length>0 %}
+<div class="container border border-5 rounded mt-2 bg-light">
+  <div class="row justify-content-md-center mx-4 my-4">
+    {% include 'pages/patient/_liste_stay.html.twig' with {'sejours':
+    sejourNoValidate, 'titre':'Mes Séjours en attente de confirmation',
+    'validate' : 0} %}
+  </div>
+</div>
+{% endif %} {% endif %} {% endblock %}

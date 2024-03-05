@@ -1,0 +1,52 @@
+{% if etat == '' and sejours|length ==0 %} {% else %}
+<div class="bg-light rounded-3">
+  <div class="container-fluid text-center">
+    <h2>{{ titre }}</h2>
+    <div class="col">
+      {% if sejours|length >0 %}
+      <table class="table">
+        <caption>
+          &nbsp;
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">Spécialité</th>
+            <th scope="col">Médecin</th>
+            <th scope="col">Début</th>
+            <th scope="col">Fin</th>
+            <th scope="col">Etat</th>
+            <th scope="col">détail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sejour in sejours %}
+
+          <tr class="{{ sejour.etat }}">
+            <th scope="row">{{ sejour.reason }}</th>
+            <td>{{ sejour.speciality.name }}</td>
+            <td>
+              {{ sejour.medecin.user.lastname }}
+              {{ sejour.medecin.user.firstname }}
+            </td>
+            <td>{{ sejour.startdate|date("d/m/Y") }}</td>
+            <td>{{ sejour.enddate|date("d/m/Y") }}</td>
+            <td>
+              {% if sejour.isValidate %} confirmé {% else %} en attente de
+              confirmation {% endif %}
+            </td>
+            <td class="text-center">
+              <a href="{{ path('app_sejour_show', { id: sejour.id }) }}"
+                ><i class="fa-solid fa-circle-info"></i
+              ></a>
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %} Vous n'avez pas de séjour d'enregistré {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}

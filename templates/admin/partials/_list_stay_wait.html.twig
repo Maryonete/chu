@@ -1,0 +1,92 @@
+<div class="row g-4 pb-5">
+  <table class="table table-striped table-hover sortTable">
+    <caption>
+      Séjours en attentes de traitement
+    </caption>
+    <thead>
+      <tr class="text-center">
+        <th scope="col">début</th>
+        <th scope="col">fin</th>
+        <th scope="col">spécialité</th>
+        <th scope="col">Patient</th>
+        <th scope="col">Motif</th>
+
+        {% if list == '' %} {% elseif list == 'list' %}
+        <th scope="col" class="text-center">Ajouter au calendrier</th>
+        {% else %}
+        <th scope="col" class="text-center">attaché à l'événement</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for stay in listeStayWait %}
+      <tr>
+        <th scope="row">
+          {{ stay.getStartDate|format_datetime('short', 'none', locale='fr') }}
+        </th>
+        <td>
+          {{ stay.getEndDate|format_datetime('short', 'none', locale='fr') }}
+        </td>
+        <td>{{ stay.speciality.name }}</td>
+
+        <td>
+          {{ stay.patient.user.firstname }} {{ stay.patient.user.lastname }}
+        </td>
+        <td>{{ stay.reason }}</td>
+
+        {% if list == '' %} {% elseif list == 'list' %}
+        <td class="text-center align-middle">
+          <a
+            href="{{
+              path('app_admin_medecin_calendar', {
+                id: stay.medecin.id
+              })
+            }}"
+            ><i class="fa-solid fa-plus"></i
+          ></a>
+        </td>
+        {% else %}
+        <td class="text-center align-middle">
+          <input
+            type="radio"
+            value="{{ stay.id }}"
+            name="stay"
+            onchange="addStayToCalendar(this);return false;"
+          />
+        </td>
+        {% endif %}
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!-- #TODO deplacer JS ci-dessous dans script JS -->
+<script>
+  //evenement sur calendrier des médecins
+  function addStayToCalendar(cal) {
+    id = cal.value;
+    console.log("addStayToCalendar: " + id);
+
+    if (id > 0) {
+      let xmlHttp = new XMLHttpRequest();
+
+      xmlHttp.onreadystatechange = () => {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+          let Data = JSON.parse(xmlHttp.responseText);
+          console.log(Data);
+          document.querySelector("input#calendar_title").value = Data[0].title;
+
+          document.querySelector("textarea#calendar_description").value =
+            Data[0].description;
+        }
+      };
+      url = "/admin/" + id + "/stay";
+      xmlHttp.open("get", url, true);
+      xmlHttp.send(null);
+    } else {
+      document.querySelector("input#calendar_title").value = "";
+      document.querySelector("textarea#calendar_description").value = "";
+    }
+  }
+</script>

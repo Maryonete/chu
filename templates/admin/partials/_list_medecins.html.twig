@@ -1,0 +1,56 @@
+<div class="row g-4 pb-5">
+  <table class="table table-striped table-hover sortTable">
+    <caption>
+      Liste des médecins du CHU
+    </caption>
+    <thead>
+      <tr class="text-center">
+        <th scope="col">id</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Prénom</th>
+        <th scope="col">Spécialités</th>
+        <th scope="col">Agenda</th>
+        <th scope="col">MAJ</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for medecin in listeMedecin|sort((a, b) => a.user.lastname <=>
+      b.user.lastname) %}
+
+      <tr>
+        <th scope="row">{{ medecin.id }}</th>
+        <td>{{ medecin.user.lastname }}</td>
+        <td>{{ medecin.user.firstname }}</td>
+        <td>
+          {% for spe in medecin.speciality|sort((a, b) => a.name <=> b.name) %}
+          {{ spe.name }}<br />
+          {% endfor %}
+        </td>
+        <td class="text-center align-middle">
+          <a
+            href="{{
+              path('app_admin_medecin_calendar', {
+                id: medecin.id
+              })
+            }}"
+            alt="add to calendar"
+            ><i class="fa-solid fa-calendar-days"></i
+          ></a>
+        </td>
+        <td class="text-center align-middle">
+          <a
+            href="{{
+              path('app_medecin_edit', {
+                id: medecin.id
+              })
+            }}"
+            alt="maj medecin"
+            ><i class="fa-solid fa-arrows-rotate"></i
+          ></a>
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
