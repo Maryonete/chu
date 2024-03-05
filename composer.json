@@ -13,6 +13,7 @@
     "doctrine/doctrine-migrations-bundle": "^3.3",
     "doctrine/orm": "^3.0",
     "easycorp/easyadmin-bundle": "^4.9",
+    "ext-intl": "*",
     "fakerphp/faker": "^1.23",
     "lexik/jwt-authentication-bundle": "^2.20",
     "nelmio/cors-bundle": "^2.4",
