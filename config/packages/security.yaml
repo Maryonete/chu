@@ -55,6 +55,7 @@ security:
     #- { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/admin, roles: ROLE_ADMIN }
     # - { path: ^/api, roles: ["ROLE_MEDECIN", "ROLE_ADMIN"] }
+    - { path: /, roles: PUBLIC_ACCESS }
 
 when@test:
   security:
