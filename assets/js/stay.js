@@ -2,6 +2,11 @@ const blocDatesSelect = document.querySelector("div#blocDatesSelect");
 const blocMedecin = document.querySelector("div#blocMedecin");
 const stay_medecin = document.querySelector("select.stay_medecin");
 const stay_speciality = document.querySelector("select.stay_speciality");
+var baseUrl = "https://" + window.location.hostname; // Obtenir le nom de domaine sans le protocole
+// #TODO
+if (window.location.hostname === "localhost") {
+  baseUrl += ":8000"; // Ajoute le port 8000 si l'application est en cours d'exécution localement
+}
 
 if (stay_speciality.value > 0 && stay_medecin.value > 0) {
   blocMedecin.classList.remove("d-none");
@@ -21,7 +26,7 @@ function getMedecins(event, staySpecialitySelected) {
   console.log("getMedecins");
 
   // axios bascule de https vers http ... pour contrer:
-  var url = window.location.origin + "/" + this.value + "/medecins/";
+  var url = baseUrl + "/" + this.value + "/medecins/";
 
   console.log(url);
   axios
@@ -78,8 +83,7 @@ function getDates(event) {
   event.preventDefault(); // associée à un événement JavaScript permet d'éviter tout autre traitement.
   console.log("Médecin selectionné : " + stay_medecin.value);
 
-  var urlDaysOut =
-    window.location.origin + "/" + stay_medecin.value + "/notMedecinjson";
+  var urlDaysOut = baseUrl + "/" + stay_medecin.value + "/notMedecinjson";
   console.log(urlDaysOut);
   axios
     .get(urlDaysOut)
