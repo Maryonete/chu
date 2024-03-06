@@ -20,8 +20,8 @@
     "build": "encore production --progress"
   },
   "engines": {
-    "node": "20.7.*",
-    "yarn": "1.22.*"
+    "node": "20.7.x",
+    "yarn": "1.22.x"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.10",
