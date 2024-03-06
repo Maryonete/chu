@@ -70,7 +70,19 @@ function getMedecins(event, staySpecialitySelected) {
       divmedecinList.appendChild(selectList);
     })
     .catch((error) => {
-      console.error(url + " : " + error);
+      // Erreur lors de la requête
+      if (error.response) {
+        // Erreur de réponse HTTP
+        console.log("Status:", error.response.status);
+        console.log("Data:", error.response.data);
+        console.log("Headers:", error.response.headers);
+      } else if (error.request) {
+        // Erreur de la requête
+        console.log("Request:", error.request);
+      } else {
+        // Erreur générique
+        console.error("Error:", error.message);
+      }
       window.alert("Une erreur s'est produite.");
     });
 }
