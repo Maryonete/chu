@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
   medecin_event_limit_day: 2
+  allow_prd_load: true
 
 services:
   # default configuration for services in *this* file
