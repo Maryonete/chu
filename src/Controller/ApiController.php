@@ -136,7 +136,6 @@ class ApiController extends AbstractController
         if (!$data) {
             return new JsonResponse(['error' => 'données invalide'], 400);
         }
-
         if (!isset($data['medecin_id']) || !isset($data['patient_id'])) {
             return new JsonResponse(['error' => '[GET] Opinions data incompletes'], 400);
         }
@@ -152,6 +151,7 @@ class ApiController extends AbstractController
             foreach ($prescriptions as $prescription) {
                 $medicationsInfo = [];
                 $medications = $prescription->getMedications();
+
                 /** @var Medication $medication */
                 foreach ($medications as $medication) {
 
@@ -160,11 +160,12 @@ class ApiController extends AbstractController
                         'drug'      => $medication->getDrug()->getName(),
                     ];
                 }
+
                 $flatArray[] = [
                     'id'            => $prescription->getId(),
                     'start'         => $prescription->getStartDate()->format('Y-m-d'),
                     'end'           => $prescription->getEndDate()->format('Y-m-d'),
-                    // 'medications'   => $medicationsInfo,
+                    'medications'   => $medicationsInfo,
                 ];
             }
 
