@@ -23,7 +23,7 @@ Les administrateurs peuvent gérer les plannings des médecins en créant des m�
 Pour utiliser l'application en ligne, veuillez vous rendre sur le lien suivant:
 
 ```bash
-  [SoigneMoi en ligne](https://soignemoi-chu-19a585dde838.herokuapp.com/)
+  [https://soignemoi-chu-19a585dde838.herokuapp.com](https://soignemoi-chu-19a585dde838.herokuapp.com/)
 ```
 
 ## Installation locale
