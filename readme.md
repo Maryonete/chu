@@ -24,7 +24,7 @@ Pour utiliser l'application en ligne, veuillez vous rendre sur le lien suivant:
 
 ```bash
 
-[https://soignemoi-chu-19a585dde838.herokuapp.com](https://soignemoi-chu-19a585dde838.herokuapp.com/)
+https://soignemoi-chu-19a585dde838.herokuapp.com
 
 ```
 
@@ -39,7 +39,6 @@ Assurez-vous d'avoir les éléments suivants installés avant de commencer :
 - Composer
 - Symfony CLI
 - NodeJS : yarn ou nmp
-
 
 ### Installation
 
@@ -58,16 +57,16 @@ Assurez-vous d'avoir les éléments suivants installés avant de commencer :
 3. Installez les dépendances avec Composer:
 
 ```bash
-    `composer install`
+    composer install
 ```
 
 4. Installez les dépendances:
-```bash
-    `yarn install`
-    ou
-    `npm install`
-```
 
+```bash
+    yarn install
+    ou
+    npm install
+```
 
 5. Modifier le fichier `.env` à la racine du projet avec les informations de votre base de données et ajoutez les variables suivantes:
 
@@ -76,53 +75,46 @@ Assurez-vous d'avoir les éléments suivants installés avant de commencer :
     DATABASE_URL= Votre Base de données
 ```
 
-6. Générer les clés privée et publique JWT:
+6. Créer la base de données:
 
 ```bash
-   `php bin/console lexik:jwt:generate-keypair`
-
+  php bin/console doctrine:database:create
 ```
 
-7. Créer la base de données:
-
-    ```bash
-  `php bin/console doctrine:database:create`
-```
- 
-8. Exécuter les migrations et créer la structure de la base de données:
+7. Exécuter les migrations et créer la structure de la base de données:
 
 ```bash
-  `php bin/console doctrine:migrations:migrate`
+  php bin/console doctrine:migrations:migrate -n
 ```
 
-9. Insérer des enregistrements dans la base de données
+8. Insérer des enregistrements dans la base de données
 
 ```bash
-  `php bin/console doctrine:fixtures:load`
+  php bin/console doctrine:fixtures:load -n
 ```
 
-10. Lancez le serveur Symfony
+9. Démarrer le serveur Symfony
 
 ```bash
-  `symfony serve`
+  symfony serve
 ```
 
-11. ...
+10. Construction du projet
 
 ```bash
-  `yarn run build`
-  ou
-  `npm run build`
+  yarn run build
+ou
+  npm run build
 ```
 
-12. Enfin, accéder à l'application:
+11. Enfin, accéder à l'application:
 
 ```bash
-  `http://localhost:8000`
+  https://localhost:8000
    ou l'adresse définie dans la configuration de votre serveur web
 ```
 
-### Utilisation
+## Utilisation
 
 #### Identifiants des utilisateurs tests
 
