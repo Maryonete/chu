@@ -20,9 +20,8 @@ window.addEventListener("click", function (event) {
 function getMedecins(event, staySpecialitySelected) {
   console.log("getMedecins");
 
-  // axios bascule de https vers http ... pour contrer:
-  var url = window.location.origin + "/" + this.value + "/medecins/";
-
+  // axios bascule de https vers http ...
+  var url = "/" + this.value + "/medecins/";
   console.log(url);
   axios
     .get(url)
@@ -78,8 +77,7 @@ function getDates(event) {
   event.preventDefault(); // associée à un événement JavaScript permet d'éviter tout autre traitement.
   console.log("Médecin selectionné : " + stay_medecin.value);
 
-  var urlDaysOut =
-    window.location.origin + "/" + stay_medecin.value + "/notMedecinjson";
+  var urlDaysOut = "/" + stay_medecin.value + "/notMedecinjson";
   console.log(urlDaysOut);
   axios
     .get(urlDaysOut)

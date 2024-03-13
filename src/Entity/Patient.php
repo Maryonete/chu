@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
-#[ORM\Table(name: 'Patient')]
+#[ORM\Table(name: 'patient')]
 #[ApiResource]
 class Patient
 {

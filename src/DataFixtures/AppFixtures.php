@@ -19,21 +19,17 @@ use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 class AppFixtures extends Fixture
 {
-
     private Generator $faker;
-
     private UserPasswordHasherInterface $encoder;
-
     private DateTime $now;
 
     public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->faker = Factory::create('fr_FR');
         $this->encoder = $encoder;
-        $this->now = new \DateTime("now");
+        $this->now = new DateTime("now");
     }
 
 
@@ -207,8 +203,8 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setRoles(['ROLE_MEDECIN']);
         $user->setPassword($this->encoder->hashPassword($user, 'test'));
-        $user->setFirstName($this->faker->firstName);
-        $user->setLastName($this->faker->lastName);
+        $user->setFirstName($this->faker->firstName());
+        $user->setLastName($this->faker->lastName());
         $user->setEmail('medecin@studi.fr');
         $manager->persist($user);
 
@@ -232,23 +228,23 @@ class AppFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_USER']);
             $user->setPassword($this->encoder->hashPassword($user, 'test'));
-            $user->setFirstName($this->faker->firstName);
-            $user->setLastName($this->faker->lastName);
+            $user->setFirstName($this->faker->firstName());
+            $user->setLastName($this->faker->lastName());
             // utilisé pour les tests
             if ($i == 1) {
                 $email = "john.do@test.fr";
             } else {
-                $email = $this->faker->email;
+                $email = $this->faker->email();
             }
             $user->setEmail($email);
 
             // Adresse
             $patient = new Patient();
             $patient->setUser($user);
-            $patient->setAdLibelle($this->faker->streetAddress);
-            $patient->setAdCp($this->faker->postcode);
+            $patient->setAdLibelle($this->faker->streetAddress());
+            $patient->setAdCp($this->faker->postcode());
             $patient->setAdCountry('FR');
-            $patient->setAdCity($this->faker->city);
+            $patient->setAdCity($this->faker->city());
             $manager->persist($user);
             $manager->persist($patient);
 

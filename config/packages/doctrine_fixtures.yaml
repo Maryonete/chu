@@ -1,0 +1,5 @@
+doctrine_fixtures:
+  fixture_sets:
+    app:
+      dir: "%kernel.project_dir%/src/DataFixtures"
+      class: App\DataFixtures\AppFixtures
