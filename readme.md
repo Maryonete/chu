@@ -38,6 +38,8 @@ Assurez-vous d'avoir les éléments suivants installés avant de commencer :
 - PHP 8 ou plus
 - Composer
 - Symfony CLI
+- NodeJS : yarn ou nmp
+
 
 ### Installation
 
@@ -53,54 +55,67 @@ Assurez-vous d'avoir les éléments suivants installés avant de commencer :
     cd chu
 ```
 
-3. Installez les dépendances:
+3. Installez les dépendances avec Composer:
 
 ```bash
-    composer install
+    `composer install`
 ```
 
-4. Modifier le fichier `.env` à la racine du projet avec les informations de votre base de données et ajoutez les variables suivantes:
+4. Installez les dépendances:
+```bash
+    `yarn install`
+    ou
+    `npm install`
+```
+
+
+5. Modifier le fichier `.env` à la racine du projet avec les informations de votre base de données et ajoutez les variables suivantes:
 
 ```bash
     ### Data base access ###
     DATABASE_URL= Votre Base de données
-
-    ###> lexik/jwt-authentication-bundle ###
-    JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
-    JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
-    JWT_PASSPHRASE=passphrase
-
-    ###> nelmio/cors-bundle ###
-    CORS_ALLOW_ORIGIN='^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
-
 ```
 
-5. Générer les clés privée et publique JWT:
+6. Générer les clés privée et publique JWT:
 
 ```bash
-    openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
-    openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+   `php bin/console lexik:jwt:generate-keypair`
+
 ```
 
-6. Exécuter les migrations et créer la structure de la base de données:
+7. Créer la base de données:
+
+    ```bash
+  `php bin/console doctrine:database:create`
+```
+ 
+8. Exécuter les migrations et créer la structure de la base de données:
 
 ```bash
   `php bin/console doctrine:migrations:migrate`
 ```
 
-7. Insérer des enregistrements dans la base de données
+9. Insérer des enregistrements dans la base de données
 
 ```bash
   `php bin/console doctrine:fixtures:load`
 ```
 
-8. Lancez le serveur Symfony
+10. Lancez le serveur Symfony
 
 ```bash
-  `symfony server:start`
+  `symfony serve`
 ```
 
-9. Enfin, accéder à l'application:
+11. ...
+
+```bash
+  `yarn run build`
+  ou
+  `npm run build`
+```
+
+12. Enfin, accéder à l'application:
 
 ```bash
   `http://localhost:8000`
