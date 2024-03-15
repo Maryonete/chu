@@ -27,10 +27,15 @@ header {
 main {
   flex-grow: 1; /* Prend le reste de l'espace disponible */
 }
-
+.logo-img {
+  height: 64px;
+}
 div.form-error {
   color: $alert;
   padding: 1em;
+}
+.navbar-brand {
+  min-width: 180px;
 }
 .footer {
   color: #ffffff;
