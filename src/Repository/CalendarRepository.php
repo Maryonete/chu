@@ -54,6 +54,7 @@ class CalendarRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     /**
      * 
      *

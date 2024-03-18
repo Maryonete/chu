@@ -67,6 +67,15 @@ class AppFixtures extends Fixture
         $admin->setEmail('admin@studi.fr');
         $manager->persist($admin);
 
+        // SECRETAIRE
+        $staff = new User();
+        $staff->setRoles(['ROLE_STAFF']);
+        $staff->setPassword($this->encoder->hashPassword($staff, 'test'));
+        $staff->setFirstName('staff');
+        $staff->setLastName('Secretaire');
+        $staff->setEmail('staff@studi.fr');
+        $manager->persist($staff);
+
         // MEDECIN
         $medecins = [];
         for ($i = 1; $i <= 10; $i++) {
@@ -118,13 +127,16 @@ class AppFixtures extends Fixture
                 $sejour->setSpeciality($this->faker->randomElement($listSpe));
                 $sejour->setMedecin($this->faker->randomElement($medecins));
 
-
+                # 3 à venir
+                $dateB = $this->faker->dateTimeBetween('-1 year', '+1 year');
                 if ($k < 3) {
                     $dateA = $this->faker->dateTimeBetween('+1 month', '+1 year');
+                } else if ($k == 4) {
+                    $dateA = $this->faker->dateTimeBetween('-10 days', '-3 days');
+                    $dateB = new DateTime();
                 } else {
                     $dateA = $this->faker->dateTimeBetween('-1 year', '+1 year');
                 }
-                $dateB = $this->faker->dateTimeBetween('-1 year', '+1 year');
 
                 if ($dateA < $dateB) {
                     $sejour->setStartDate($dateA);
