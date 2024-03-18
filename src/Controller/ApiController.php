@@ -86,6 +86,44 @@ class ApiController extends AbstractController
         }
     }
     /**
+     * Liste des patients du jour : entrées + sorties
+     */
+    #[Route('/api/getAllPatientsOfDay', name: 'api_get_patients_today', methods: ['GET'])]
+    public function getAllPatientsOfDay(
+        Request $request,
+        SerializerInterface $serializer,
+        StayRepository $stayRepo
+    ): JsonResponse {
+
+        try {
+            $stays = $stayRepo->findAllPatientsOfToday();
+
+            $flatArray = [];
+            foreach ($stays as $stay) {
+                $flatArray[] = [
+                    'id'            => $stay->getId(),
+                    'patient_id'    => $stay->getPatient()->getId(),
+                    'patient_infos' => $stay->getPatient()->getAllInformation(),
+                    'speciality'    => $stay->getSpeciality()->getName(),
+                    'reason'        => $stay->getReason(),
+                    'start'         => $stay->getStartDate()->format('Y-m-d H:i:s'), // Formatage de la date de début
+                    'end'           => $stay->getEndDate()->format('Y-m-d H:i:s'), // Formatage de la date de fin
+                    'description'   => $stay->getDescription(),
+                    'medecin_id'    => $stay->getMedecin()->getId(),
+                ];
+            }
+            // dd($flatArray);
+            $jsonList = $serializer->serialize(
+                $flatArray,
+                'json'
+            );
+
+            return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => 'Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+    /**
      *retourne les infos d'un patient
      */
     #[Route('/api/getInfoPatient/{id<\d+>}', name: 'api_get_info_patient', methods: ['GET', 'POST'])]

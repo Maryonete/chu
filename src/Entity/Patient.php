@@ -246,4 +246,49 @@ class Patient
 
         return $this;
     }
+    /**
+     * Get all information of the patient.
+     * 
+     * @return array
+     */
+    public function getAllInformation(): array
+    {
+        $staysInfo = [];
+        foreach ($this->stays as $stay) {
+            $stayInfo = [
+                'id' => $stay->getId(),
+                // Ajoutez d'autres informations spécifiques au séjour ici
+            ];
+            $staysInfo[] = $stayInfo;
+        }
+
+        $prescriptionsInfo = [];
+        foreach ($this->prescriptions as $prescription) {
+            $prescriptionInfo = [
+                'id' => $prescription->getId(),
+                // Ajoutez d'autres informations spécifiques à la prescription ici
+            ];
+            $prescriptionsInfo[] = $prescriptionInfo;
+        }
+
+        $opinionsInfo = [];
+        foreach ($this->opinions as $opinion) {
+            $opinionInfo = [
+                'id' => $opinion->getId(),
+                // Ajoutez d'autres informations spécifiques à l'opinion ici
+            ];
+            $opinionsInfo[] = $opinionInfo;
+        }
+
+        return [
+            'id' => $this->id,
+            'adlibelle' => $this->adlibelle,
+            'adcp' => $this->adcp,
+            'adcity' => $this->adcity,
+            'adcountry' => $this->adcountry,
+            'stays' => $staysInfo,
+            'prescriptions' => $prescriptionsInfo,
+            'opinions' => $opinionsInfo,
+        ];
+    }
 }
