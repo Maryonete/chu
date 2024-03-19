@@ -157,8 +157,14 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
         $this->loadDrugs($manager);
-        $this->loadMedecinTest($manager);
-        $this->loadCalendars($manager);
+        $this->loadMedecinTest($manager, '');
+        $this->loadCalendars($manager, '');
+
+        $this->loadMedecinTest($manager, '1');
+        $this->loadCalendars($manager, '1');
+
+        $this->loadMedecinTest($manager, '2');
+        $this->loadCalendars($manager, '2');
     }
     // Drugs
     private function loadDrugs(ObjectManager $manager): void
@@ -173,9 +179,9 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
     // Calendar : seulement pour le premier medecin
-    private function loadCalendars(ObjectManager $manager): void
+    private function loadCalendars(ObjectManager $manager, $email): void
     {
-        $userMedecin = $manager->getRepository(User::class)->findOneByEmail("medecin@studi.fr");
+        $userMedecin = $manager->getRepository(User::class)->findOneByEmail($email . 'medecin@studi.fr');
         $medecinStays = $manager->getRepository(Stay::class)->findBy([
             'medecin'      => $userMedecin->getMedecin(),
         ]);
@@ -185,7 +191,7 @@ class AppFixtures extends Fixture
         foreach ($medecinStays as $stay) {
 
             $stayStartDate = $stay->getStartDate();
-            $stayEndDate    = $stay->getEndDate();
+            $stayEndDate   = $stay->getEndDate();
 
             // Créer une instance de Calendar
             $calendar = new Calendar();
@@ -209,17 +215,18 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
     // Medecin test pour api mobile
-    private function loadMedecinTest(ObjectManager $manager): void
+    private function loadMedecinTest(ObjectManager $manager, String $email): void
     {
+
         // 1. création du médecin test
         $user = new User();
         $user->setRoles(['ROLE_MEDECIN']);
         $user->setPassword($this->encoder->hashPassword($user, 'test'));
         $user->setFirstName($this->faker->firstName());
         $user->setLastName($this->faker->lastName());
-        $user->setEmail('medecin@studi.fr');
+        $user->setEmail($email . 'medecin@studi.fr');
         $manager->persist($user);
-
+        // dump('loadMedecinTest %s', $user->getEmail());
         $medecin = new Medecin();
         $medecin->setUser($user);
 
@@ -244,7 +251,7 @@ class AppFixtures extends Fixture
             $user->setLastName($this->faker->lastName());
             // utilisé pour les tests
             if ($i == 1) {
-                $email = "john.do@test.fr";
+                $email = $email . "john.do@test.fr";
             } else {
                 $email = $this->faker->email();
             }
@@ -282,8 +289,10 @@ class AppFixtures extends Fixture
                         $dateB = clone $dateNow->modify('-11 months');
                         break;
                     case 3:
-                        $dateA = clone $dateNow->modify('-10 months');
-                        $dateB = clone $dateNow->modify('-9 months');
+                        $dateA = clone $dateNow->modify('-1 week');
+                        $dateB = new DateTime();
+                        $sejour->setValidate(true);
+                        // dump('A: %s - B: %s', $dateA, $dateB);
                         break;
                     default:
                         $dateA = clone $dateNow->modify('+1 month');

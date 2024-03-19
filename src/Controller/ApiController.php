@@ -65,7 +65,7 @@ class ApiController extends AbstractController
                 $flatArray[] = [
                     'id'            => $calendar->getId(),
                     'title'         => $calendar->getTitle(),
-                    'patient_id'       =>  $calendar->getStay()->getPatient()->getId(),
+                    'patient_id'    => $calendar->getStay()->getPatient()->getId(),
                     'speciality'    => $calendar->getStay()->getSpeciality()->getName(),
                     'reason'        => $calendar->getStay()->getReason(),
                     'start'         => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
@@ -90,26 +90,26 @@ class ApiController extends AbstractController
      */
     #[Route('/api/getAllPatientsOfDay', name: 'api_get_patients_today', methods: ['GET'])]
     public function getAllPatientsOfDay(
-        Request $request,
         SerializerInterface $serializer,
-        StayRepository $stayRepo
+        CalendarRepository $calendarRepo
     ): JsonResponse {
 
         try {
-            $stays = $stayRepo->findAllPatientsOfToday();
+            $calendars = $calendarRepo->findAllPatientsOfToday();
 
             $flatArray = [];
-            foreach ($stays as $stay) {
+            foreach ($calendars as $calendar) {
                 $flatArray[] = [
-                    'id'            => $stay->getId(),
-                    'patient_id'    => $stay->getPatient()->getId(),
-                    'patient_infos' => $stay->getPatient()->getAllInformation(),
-                    'speciality'    => $stay->getSpeciality()->getName(),
-                    'reason'        => $stay->getReason(),
-                    'start'         => $stay->getStartDate()->format('Y-m-d H:i:s'), // Formatage de la date de début
-                    'end'           => $stay->getEndDate()->format('Y-m-d H:i:s'), // Formatage de la date de fin
-                    'description'   => $stay->getDescription(),
-                    'medecin_id'    => $stay->getMedecin()->getId(),
+                    'id'            => $calendar->getId(),
+                    'title'         => $calendar->getTitle(),
+                    'patient_infos' => $calendar->getStay()->getPatient()->getAllInformation(),
+                    'patient_id'    => $calendar->getStay()->getPatient()->getId(),
+                    'speciality'    => $calendar->getStay()->getSpeciality()->getName(),
+                    'reason'        => $calendar->getStay()->getReason(),
+                    'start'         => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
+                    'end'           => $calendar->getEnd()->format('Y-m-d H:i:s'), // Formatage de la date de fin
+                    'description'   => $calendar->getDescription(),
+                    'medecin_id'    => $calendar->getMedecin()->getId(),
                 ];
             }
             // dd($flatArray);

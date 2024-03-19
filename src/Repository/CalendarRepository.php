@@ -54,7 +54,30 @@ class CalendarRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    // liste des patients qui entrent ou sortent aujourd'hui
+    public function findAllPatientsOfToday(): ?array
+    {
+        // Date du jour
+        $today = new \DateTime('today');
 
+        // Définir les bornes de la journée actuelle
+        $startOfDay = clone $today;
+        $startOfDay->setTime(0, 0, 0); // Début de la journée (00:00:00)
+
+        $endOfDay = clone $today;
+        $endOfDay->setTime(23, 59, 59); // Fin de la journée (23:59:59)
+        return $this->createQueryBuilder('c')
+            ->select('c', 's', 'p', 'sp')
+            ->leftjoin('c.stay', 's')
+            ->leftjoin('s.patient', 'p')
+            ->leftjoin('s.speciality', 'sp')
+            ->andWhere('c.start BETWEEN :startOfDay AND :endOfDay')
+            ->orWhere('c.end BETWEEN :startOfDay AND :endOfDay')
+            ->setParameter('startOfDay', $startOfDay)
+            ->setParameter('endOfDay', $endOfDay)
+            ->getQuery()
+            ->getResult();
+    }
     /**
      * 
      *
