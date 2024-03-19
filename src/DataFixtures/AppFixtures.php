@@ -215,7 +215,7 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
     // Medecin test pour api mobile
-    private function loadMedecinTest(ObjectManager $manager, String $email): void
+    private function loadMedecinTest(ObjectManager $manager, String $nb): void
     {
 
         // 1. création du médecin test
@@ -224,7 +224,7 @@ class AppFixtures extends Fixture
         $user->setPassword($this->encoder->hashPassword($user, 'test'));
         $user->setFirstName($this->faker->firstName());
         $user->setLastName($this->faker->lastName());
-        $user->setEmail($email . 'medecin@studi.fr');
+        $user->setEmail($nb . 'medecin@studi.fr');
         $manager->persist($user);
         // dump('loadMedecinTest %s', $user->getEmail());
         $medecin = new Medecin();
@@ -251,7 +251,7 @@ class AppFixtures extends Fixture
             $user->setLastName($this->faker->lastName());
             // utilisé pour les tests
             if ($i == 1) {
-                $email = $email . "john.do@test.fr";
+                $email = $nb . "john.do@test.fr";
             } else {
                 $email = $this->faker->email();
             }
@@ -278,28 +278,55 @@ class AppFixtures extends Fixture
 
                 // on enregistre au moins 1 séjours à venir, 2 passés et un en cours
                 $dateNow = clone $this->now;
-                switch ($k) {
-                    case 1:
-                        $dateA = clone $dateNow;
-                        $dateB = clone $dateNow->modify('+1 week');
-                        $sejour->setValidate(true);
-                        break;
-                    case 2:
-                        $dateA = clone $dateNow->modify('-1 year');
-                        $dateB = clone $dateNow->modify('-11 months');
-                        break;
-                    case 3:
-                        $dateA = clone $dateNow->modify('-1 week');
-                        $dateB = new DateTime();
-                        $sejour->setValidate(true);
-                        // dump('A: %s - B: %s', $dateA, $dateB);
-                        break;
-                    default:
-                        $dateA = clone $dateNow->modify('+1 month');
-                        $dateB = clone $dateNow->modify('+6 weeks');
-                        $sejour->setValidate(true);
-                        break;
+                if ($nb === '' or $nb === '2') {
+                    switch ($k) {
+                        case 1:
+                            $dateA = clone $dateNow;
+                            $dateB = clone $dateNow->modify('+1 week');
+                            $sejour->setValidate(true);
+                            break;
+                        case 2:
+                            $dateA = clone $dateNow->modify('-1 year');
+                            $dateB = clone $dateNow->modify('-11 months');
+                            break;
+                        case 3:
+                            $dateA = clone $dateNow->modify('-2 week');
+                            $dateB = clone $dateNow->modify('-1 week');
+                            $sejour->setValidate(true);
+                            // dump('A: %s - B: %s', $dateA, $dateB);
+                            break;
+                        default:
+                            $dateA = clone $dateNow->modify('+1 month');
+                            $dateB = clone $dateNow->modify('+6 weeks');
+                            $sejour->setValidate(true);
+                            break;
+                    }
+                } else {
+                    switch ($k) {
+                        case 1:
+                            $dateA = clone $dateNow->modify('-2 day');
+                            $dateB = clone $dateNow->modify('+1 week');
+                            $sejour->setValidate(true);
+                            break;
+                        case 2:
+                            $dateA = clone $dateNow->modify('-1 year');
+                            $dateB = clone $dateNow->modify('-11 months');
+                            break;
+                        case 3:
+                            $dateA = clone $dateNow->modify('-1 week');
+                            $dateB = new DateTime();
+                            $sejour->setValidate(true);
+                            // dump('A: %s - B: %s', $dateA, $dateB);
+                            break;
+                        default:
+                            $dateA = clone $dateNow->modify('+1 month');
+                            $dateB = clone $dateNow->modify('+6 weeks');
+                            $sejour->setValidate(true);
+                            break;
+                    }
                 }
+
+
 
                 $sejour->setStartDate($dateA->setTime(0, 0, 0));
                 $sejour->setEndDate($dateB->setTime(0, 0, 0));
