@@ -313,6 +313,8 @@ class Patient
 
         return [
             'id'        => $this->id,
+            'firstname' =>  $this->getUser()->getFirstname(),
+            'lastname'  =>  $this->getUser()->getLastname(),
             'adlibelle' => $this->adlibelle,
             'adcp'      => $this->adcp,
             'adcity'    => $this->adcity,
