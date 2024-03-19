@@ -106,8 +106,8 @@ class ApiController extends AbstractController
                     'patient_id'    => $calendar->getStay()->getPatient()->getId(),
                     'speciality'    => $calendar->getStay()->getSpeciality()->getName(),
                     'reason'        => $calendar->getStay()->getReason(),
-                    'start'         => $calendar->getStart()->format('Y-m-d H:i:s'), // Formatage de la date de début
-                    'end'           => $calendar->getEnd()->format('Y-m-d H:i:s'), // Formatage de la date de fin
+                    'start'         => $calendar->getStart(),
+                    'end'           => $calendar->getEnd(),
                     'description'   => $calendar->getDescription(),
                     'medecin_id'    => $calendar->getMedecin()->getId(),
                 ];
