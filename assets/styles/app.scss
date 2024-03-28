@@ -54,7 +54,9 @@ footer a.nav-link {
   width: 80%;
   margin: auto;
 }
-
+p.lead{
+  text-align: justify;
+}
 .input-group-append {
   cursor: pointer;
 }
@@ -64,14 +66,14 @@ label.required:before {
   color: red;
 }
 a {
-  font-family: "Darker Grotesque", sans-serif;
+  font-family: Georgia, sans-serif;
   font-size: 20px;
   text-decoration: none;
 }
 h1,
 h2,
 h3 {
-  font-family: "sans-serif";
+  font-family: Georgia;
   color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
 }
 h1 {
