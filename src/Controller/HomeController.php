@@ -62,4 +62,9 @@ class HomeController extends AbstractController
     {
         return $this->render('pages/static/droits_patients.html.twig',);
     }
+    #[Route('/privacy', name: 'privacy', methods: ['GET', 'POST'])]
+    public function privacy(): Response
+    {
+        return $this->render('pages/static/privacy.html.twig',);
+    }
 }

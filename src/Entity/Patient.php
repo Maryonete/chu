@@ -255,40 +255,73 @@ class Patient
     {
         $staysInfo = [];
         foreach ($this->stays as $stay) {
-            $stayInfo = [
-                'id' => $stay->getId(),
-                // Ajoutez d'autres informations spécifiques au séjour ici
-            ];
-            $staysInfo[] = $stayInfo;
+            if ($stay->isValidate()) {
+                $stayInfo = [
+                    'id'            => $stay->getId(),
+                    'reason'        => $stay->getReason(),
+                    'description'   => $stay->getDescription(),
+                    'start_date'    => $stay->getStartDate()->format('Y-m-d'),
+                    'end_date'      => $stay->getEndDate()->format('Y-m-d'),
+                    'etat'          => $stay->getEtat(),
+                    'speciality_id' => $stay->getSpeciality()->getId(),
+                    'speciality_lib' => $stay->getSpeciality()->getName(),
+                    'medecin_id' => $stay->getMedecin()->getId(),
+                    'medecin_firstname' => $stay->getMedecin()->getUser()->getFirstname(),
+                    'medecin_lastname' => $stay->getMedecin()->getUser()->getLastname(),
+
+                ];
+                $staysInfo[] = $stayInfo;
+            }
         }
 
         $prescriptionsInfo = [];
         foreach ($this->prescriptions as $prescription) {
             $prescriptionInfo = [
                 'id' => $prescription->getId(),
-                // Ajoutez d'autres informations spécifiques à la prescription ici
+                'start_date'    => $prescription->getStartDate()->format('Y-m-d'),
+                'end_date'      => $prescription->getEndDate()->format('Y-m-d'),
+                'medecin_id'    => $prescription->getMedecin()->getId(),
+                'medecin_firstname' => $prescription->getMedecin()->getUser()->getFirstname(),
+                'medecin_lastname' => $prescription->getMedecin()->getUser()->getLastname(),
+                'medications' => [],
             ];
+            // Ajoutez des informations sur les médicaments associés à la prescription
+            foreach ($prescription->getMedications() as $medication) {
+                $medicationInfo = [
+                    'id' => $medication->getId(),
+                    'dosage' => $medication->getDosage(),
+                    'drug_name' => $medication->getDrug()->getName(),
+                ];
+                $prescriptionInfo['medications'][] = $medicationInfo;
+            }
             $prescriptionsInfo[] = $prescriptionInfo;
         }
 
         $opinionsInfo = [];
         foreach ($this->opinions as $opinion) {
             $opinionInfo = [
-                'id' => $opinion->getId(),
-                // Ajoutez d'autres informations spécifiques à l'opinion ici
+                'id'    => $opinion->getId(),
+                'title' => $opinion->getTitle(),
+                'date'  => $opinion->getDate()->format('Y-m-d'), // Formatage de la date
+                'description'   => $opinion->getDescription(),
+                'medecin_id'    => $opinion->getMedecin()->getId(),
+                'medecin_firstname' => $opinion->getMedecin()->getUser()->getFirstname(),
+                'medecin_lastname' => $opinion->getMedecin()->getUser()->getLastname()
             ];
             $opinionsInfo[] = $opinionInfo;
         }
 
         return [
-            'id' => $this->id,
+            'id'        => $this->id,
+            'firstname' =>  $this->getUser()->getFirstname(),
+            'lastname'  =>  $this->getUser()->getLastname(),
             'adlibelle' => $this->adlibelle,
-            'adcp' => $this->adcp,
-            'adcity' => $this->adcity,
+            'adcp'      => $this->adcp,
+            'adcity'    => $this->adcity,
             'adcountry' => $this->adcountry,
-            'stays' => $staysInfo,
+            'stays'     => $staysInfo,
+            'opinions'  => $opinionsInfo,
             'prescriptions' => $prescriptionsInfo,
-            'opinions' => $opinionsInfo,
         ];
     }
 }

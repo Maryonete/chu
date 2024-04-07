@@ -76,28 +76,4 @@ class StayRepository extends ServiceEntityRepository
         }
         return $tabResult;
     }
-    // liste des patients qui entrent ou sortent aujourd'hui
-    public function findAllPatientsOfToday(): ?array
-    {
-        // Date du jour
-        $today = new \DateTime('today');
-
-        // Définir les bornes de la journée actuelle
-        $startOfDay = clone $today;
-        $startOfDay->setTime(0, 0, 0); // Début de la journée (00:00:00)
-
-        $endOfDay = clone $today;
-        $endOfDay->setTime(23, 59, 59); // Fin de la journée (23:59:59)
-
-        return $this->createQueryBuilder('s')
-            ->select('s', 'p', 'sp')
-            ->leftjoin('s.patient', 'p')
-            ->leftjoin('s.speciality', 'sp')
-            ->andWhere('s.start_date BETWEEN :startOfDay AND :endOfDay')
-            ->orWhere('s.end_date BETWEEN :startOfDay AND :endOfDay')
-            ->setParameter('startOfDay', $startOfDay)
-            ->setParameter('endOfDay', $endOfDay)
-            ->getQuery()
-            ->getResult();
-    }
 }

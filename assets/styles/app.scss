@@ -19,6 +19,7 @@ body {
   flex-direction: column;
   min-height: 100vh; /* Minimum 100% de la hauteur de la fenêtre */
   margin: 0;
+  font-family: "Segoe UI", Roboto;
 }
 header {
   border-bottom: 1px solid #e5e9ef;
@@ -27,10 +28,15 @@ header {
 main {
   flex-grow: 1; /* Prend le reste de l'espace disponible */
 }
-
+.logo-img {
+  height: 64px;
+}
 div.form-error {
   color: $alert;
   padding: 1em;
+}
+.navbar-brand {
+  min-width: 180px;
 }
 .footer {
   color: #ffffff;
@@ -48,7 +54,9 @@ footer a.nav-link {
   width: 80%;
   margin: auto;
 }
-
+p.lead{
+  text-align: justify;
+}
 .input-group-append {
   cursor: pointer;
 }
@@ -58,20 +66,20 @@ label.required:before {
   color: red;
 }
 a {
-  font-family: "Darker Grotesque", sans-serif;
+  font-family: Georgia, sans-serif;
   font-size: 20px;
   text-decoration: none;
 }
 h1,
 h2,
 h3 {
+  font-family: Georgia;
   color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
 }
 h1 {
   font-size: 2.5rem;
   text-align: left;
   padding: 1em 1em 1em 0;
-  font-family: "sans-serif";
 }
 
 /** Barre de MENU */
