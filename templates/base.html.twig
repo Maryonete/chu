@@ -39,13 +39,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" defer></script>
     {% block stylesheets %}
-    {{
-      encore_entry_link_tags("app")
-    }}
-    {% endblock %} {% block javascripts %}
+    {% for file in encore_entry_css_files('app') %}
+      <link rel="stylesheet" href="{{ file }}" media="screen">
+    {% endfor %}
+    
+    {% endblock %}
+     {% block javascripts %}
     {{
       encore_entry_script_tags("app")
     }}
+    
     {% endblock %}
   </head>
   <body>
