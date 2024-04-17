@@ -34,7 +34,9 @@ class Calendar
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Stay $stay = null;
 
-
+    /**
+     * @return array<mixed>
+     */
     public function toArray(): array
     {
         $color = $this->getStay() ? "" : "#378006";
