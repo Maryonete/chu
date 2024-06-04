@@ -11,9 +11,15 @@
       http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
-    <meta name="robots" content="index, follow">
-    <meta name="description" content="Découvrez l'Hôpital SoigneMoi, classé à la 2e position du Palmarès national des meilleures hôpitaux de France. Un établissement médico-chirurgical renommé, offrant une gamme complète de services médicaux de qualité, comprenant cardiologie, chirurgie, médecine interne, et bien plus encore. Prenez rendez-vous dès aujourd'hui pour des soins de santé exceptionnels.">
-    <meta name="google-site-verification" content="4s-U02wz4k7kL8NdZ53JvguvnbVVRS3Wr7X90JUhTII" />
+    <meta name="robots" content="index, follow" />
+    <meta
+      name="description"
+      content="Découvrez l'Hôpital SoigneMoi, classé à la 2e position du Palmarès national des meilleures hôpitaux de France. Un établissement médico-chirurgical renommé, offrant une gamme complète de services médicaux de qualité, comprenant cardiologie, chirurgie, médecine interne, et bien plus encore. Prenez rendez-vous dès aujourd'hui pour des soins de santé exceptionnels."
+    />
+    <meta
+      name="google-site-verification"
+      content="4s-U02wz4k7kL8NdZ53JvguvnbVVRS3Wr7X90JUhTII"
+    />
 
     <link
       rel="icon"
@@ -37,20 +43,21 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
       media="screen"
     />
-    <!-- ✅ load jQuery ✅ -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js" defer></script>
-    {% block stylesheets %}
-    {% for file in encore_entry_css_files('app') %}
-      <link rel="stylesheet" href="{{ file }}" media="screen">
-    {% endfor %}
-    
-    {% endblock %}
-     {% block javascripts %}
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"
+      defer
+    ></script>
+    {% block stylesheets %} {% for file in encore_entry_css_files('app') %}
+    <link rel="stylesheet" href="{{ file }}" media="screen" />
+    {% endfor %} {% endblock %} {% block javascripts %}
     {{
       encore_entry_script_tags("app")
     }}
-    
+
     {% endblock %}
   </head>
   <body>

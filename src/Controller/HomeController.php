@@ -10,7 +10,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home', methods: ['GET', 'POST'])]
+    /**
+     * Contrôleur de la page d'accueil de l'application.
+     * 
+     * Cette fonction gère les requêtes GET pour la route "/".
+     * 
+     * - Si l'utilisateur est connecté :
+     *   - Si l'utilisateur a le rôle d'administrateur, il est redirigé vers la page d'administration.
+     *   - Sinon, l'utilisateur est redirigé vers la page d'accueil patient.
+     * - Si l'utilisateur n'est pas connecté, la fonction récupère la liste des spécialités et des médecins
+     *   depuis les dépôts respectifs et les passe à la vue pour affichage.
+     * 
+     * @param SpecialityRepository $speRepo Le dépôt des spécialités.
+     * @param MedecinRepository $medecinRepo Le dépôt des médecins.
+     * @return Response La réponse HTTP contenant la vue de la page d'accueil.
+     */
+    #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(
         SpecialityRepository $speRepo,
         MedecinRepository $medecinRepo
