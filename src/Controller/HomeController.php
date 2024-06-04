@@ -30,39 +30,53 @@ class HomeController extends AbstractController
         ]);
     }
     #[Route('/speciality', name: 'app_speciality_list')]
+    /**
+     * Liste des spécialités
+     *
+     * Cette fonction renvoie la liste de toutes les spécialités, triées par ordre croissant de nom.
+ 
+     *
+     * @param SpecialityRepository $speRepo
+     * @return Response
+     */
     public function speciality_list(SpecialityRepository $speRepo): Response
     {
         return $this->render('pages/speciality_list.html.twig', [
             'specialites' => $speRepo->findBy([], ['name' => 'ASC']),
         ]);
     }
-    /** pages statiques */
-    #[Route('/mentions_legales', name: 'app_mentions_legales', methods: ['GET', 'POST'])]
-    public function mentions_legales(): Response
+    #[Route('/mentions_legales', name: 'app_mentions_legales', methods: ['GET'])]
+    /**
+     * Affiche la page des mentions légales de l'application.
+     * page statique
+     *
+     * @return Response
+     */
+    public function static_mentions_legales(): Response
     {
-        return $this->render('pages/static/mentions_legales.html.twig',);
+        return $this->render('pages/static/mentions_legales.html.twig');
     }
-    #[Route('/contact', name: 'app_contact', methods: ['GET', 'POST'])]
+    #[Route('/contact', name: 'app_contact', methods: ['GET'])]
     public function contact(): Response
     {
         return $this->render('pages/static/contact.html.twig',);
     }
-    #[Route('/tarifs', name: 'app_tarifs', methods: ['GET', 'POST'])]
+    #[Route('/tarifs', name: 'app_tarifs', methods: ['GET'])]
     public function tarifs(): Response
     {
         return $this->render('pages/static/tarifs.html.twig',);
     }
-    #[Route('/faqs', name: 'app_faqs', methods: ['GET', 'POST'])]
+    #[Route('/faqs', name: 'app_faqs', methods: ['GET'])]
     public function faqs(): Response
     {
         return $this->render('pages/static/faqs.html.twig',);
     }
-    #[Route('/droitspatients', name: 'app_droits_patients', methods: ['GET', 'POST'])]
+    #[Route('/droitspatients', name: 'app_droits_patients', methods: ['GET'])]
     public function droitspatients(): Response
     {
         return $this->render('pages/static/droits_patients.html.twig',);
     }
-    #[Route('/privacy', name: 'privacy', methods: ['GET', 'POST'])]
+    #[Route('/privacy', name: 'privacy', methods: ['GET'])]
     public function privacy(): Response
     {
         return $this->render('pages/static/privacy.html.twig',);
