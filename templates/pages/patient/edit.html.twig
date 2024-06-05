@@ -7,29 +7,27 @@
   <div class="row justify-content-md-center mb-4">
     <div class="col-6">
       <h1>Mise à jour de mes données</h1>
-      <div class="form-group">
-        {{ form_label(form.user.email) }}
-        {{ form_widget(form.user.email) }}
-        <div class="form-error">
-          {{ form_errors(form.user.email) }}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form_label(form.user.lastname) }}
+            {{ form_widget(form.user.lastname) }}
+            <div class="form-error">
+              {{ form_errors(form.user.lastname) }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            {{ form_label(form.user.firstname) }}
+            {{ form_widget(form.user.firstname) }}
+            <div class="form-error">
+              {{ form_errors(form.user.firstname) }}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        {{ form_label(form.user.lastname) }}
-        {{ form_widget(form.user.lastname) }}
-        <div class="form-error">
-          {{ form_errors(form.user.lastname) }}
-        </div>
-      </div>
-      <div class="form-group">
-        {{ form_label(form.user.firstname) }}
-        {{ form_widget(form.user.firstname) }}
-        <div class="form-error">
-          {{ form_errors(form.user.firstname) }}
-        </div>
-      </div>
-      <hr class="mt-5 mb-0" />
       <div class="form-group">
         {{ form_label(form.adlibelle) }}
         {{ form_widget(form.adlibelle) }}
@@ -37,18 +35,24 @@
           {{ form_errors(form.adlibelle) }}
         </div>
       </div>
-      <div class="form-group">
-        {{ form_label(form.adcp) }}
-        {{ form_widget(form.adcp) }}
-        <div class="form-error">
-          {{ form_errors(form.adcp) }}
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            {{ form_label(form.adcp) }}
+            {{ form_widget(form.adcp) }}
+            <div class="form-error">
+              {{ form_errors(form.adcp) }}
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        {{ form_label(form.adcity) }}
-        {{ form_widget(form.adcity) }}
-        <div class="form-error">
-          {{ form_errors(form.adcity) }}
+        <div class="col-md-8">
+          <div class="form-group">
+            {{ form_label(form.adcity) }}
+            {{ form_widget(form.adcity) }}
+            <div class="form-error">
+              {{ form_errors(form.adcity) }}
+            </div>
+          </div>
         </div>
       </div>
       <div class="form-group">

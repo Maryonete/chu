@@ -3,15 +3,19 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\PatientType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
+use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 
 class RegistrationFormType extends AbstractType
 {
@@ -26,7 +30,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'label'         =>  'E-mail',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 80]),
@@ -43,7 +47,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'label'         =>  'Nom',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 50]),
@@ -60,7 +64,7 @@ class RegistrationFormType extends AbstractType
                 ],
                 'label'         =>  'Prénom',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 50]),
@@ -70,30 +74,75 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('patient', PatientType::class)
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped'    => false,
-                'attr'      => [
-                    'autocomplete' => 'new-password',
-                    'class'     =>  'form-control',
-                ],
-                'label'         =>  'Mot de passe',
-                'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir un mot de passe',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractéres',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
-            ]);
+            ->add(
+                'plainPassword',
+                RepeatedType::class,
+                [
+                    'type' => PasswordType::class,
+                    'first_options' => [
+                        'constraints' => [
+                            new NotBlank([
+                                'message' => 'Veuillez renseigner un mot de passe',
+                            ]),
+                            new Length([
+                                'min' => 8,
+                                'minMessage' => 'Votre mot de passe doit comporter au minimum {{ limit }} caractéres',
+                                // max length allowed by Symfony for security reasons
+                                'max' => 4096,
+                            ]),
+                            // #TODO
+                            //new PasswordStrength(),
+
+                        ],
+                        'label' => 'Mot de passe',
+                        'label_attr'    =>  [
+                            'class'     =>  'col-form-label'
+                        ],
+                        'attr'  => [
+                            'class'     =>  'form-control',
+                        ],
+                    ],
+                    'second_options' => [
+                        'label' => 'Répéter le mot de passe',
+                        'label_attr'    =>  [
+                            'class'     =>  'col-form-label'
+                        ],
+                        'attr'  => [
+                            'class'     =>  'form-control',
+                        ],
+                    ],
+
+                    'invalid_message' => 'Les mots de passe ne correspondent pas',
+                    // Instead of being set onto the object directly,
+                    // this is read and encoded in the controller
+                    'mapped' => false,
+
+                    // 'options' => [
+                    //     'attr' => [
+                    //         'autocomplete' => 'new-password',
+                    //     ],
+                    // ],
+                    // 'attr'      => [
+                    //     'autocomplete'  => 'new-password',
+                    //     'class'         =>  'form-control',
+                    // ],
+                    // 'label'         =>  'Mot de passe',
+                    // 'label_attr'    =>  [
+                    //     'class'     =>  'col-form-label'
+                    // ],
+                    // 'constraints' => [
+                    //     new NotBlank([
+                    //         'message' => 'Veuillez saisir un mot de passe',
+                    //     ]),
+                    //     new Length([
+                    //         'min' => 6,
+                    //         'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractéres',
+                    //         // max length allowed by Symfony for security reasons
+                    //         'max' => 4096,
+                    //     ]),
+                    // ],
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

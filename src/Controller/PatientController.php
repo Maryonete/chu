@@ -47,7 +47,6 @@ class PatientController extends AbstractController
             return $this->redirectToRoute('admin');
         }
 
-        // $patient    = $patienRepo->findByUser($security->getUser());
         $patient    = $patienRepo->findOneBy(['user' => $security->getUser()]);
         $etat       = $request->get('etat');
         $sejours    = $sejourRepo->findByPatient($patient->getId(), $etat);
@@ -153,25 +152,28 @@ class PatientController extends AbstractController
         ]);
     }
 
+
+    #[Route('{id<\d+>}/medecins', name: 'read_medecin', methods: 'GET')]
     /**
-     * liste medecin en fonction de leur specialite
-     * retourne JSon
+     * Liste des médecins associés à une spécialité.
+     *
+     * Cette fonction renvoie la liste des médecins associés à une spécialité donnée 
+     * identifiée par son ID. 
+     *
+     * @param Speciality $spe La spécialité pour laquelle récupérer les médecins
+     * @return JsonResponse Réponse JSON contenant la liste des médecins
      */
-    #[Route('{id<\d+>}/medecins', name: 'read_medecin')]
     public function listMedecinParSpe(Speciality $spe): Response|JsonResponse
     {
         $arrayOfMedecins = [];
         foreach ($spe->getMedecins() as $medecin) {
-
             $arrayOfMedecins[] = $medecin->toArray();
         }
         $columns = array_column($arrayOfMedecins, 'name');
         array_multisort($columns, SORT_ASC, $arrayOfMedecins);
-
-
-
         return $this->json($arrayOfMedecins);
     }
+
 
     #[Route('/{id<\d+>}/notMedecinjson', name: 'dispo_medecin')]
     public function busyMedecin(

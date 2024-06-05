@@ -24,7 +24,7 @@ class PatientType extends AbstractType
                 ],
                 'label'         =>  'Adresse',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 250]),
@@ -41,7 +41,7 @@ class PatientType extends AbstractType
                 ],
                 'label'         =>  'Code postal',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 50]),
@@ -58,7 +58,7 @@ class PatientType extends AbstractType
                 ],
                 'label'         =>  'Ville',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 50]),
@@ -78,7 +78,7 @@ class PatientType extends AbstractType
                 ],
                 'label'         =>  'Pays',
                 'label_attr'    =>  [
-                    'class'     =>  'col-form-label mt-4'
+                    'class'     =>  'col-form-label'
                 ],
                 'constraints'   => [
                     new Assert\Length(['min' => 2, 'max' => 50]),

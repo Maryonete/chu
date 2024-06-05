@@ -2,24 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Medication;
-use App\Entity\Opinions;
-use App\Entity\Prescription;
-use App\Repository\CalendarRepository;
-use App\Repository\DrugsRepository;
-use Symfony\Component\HttpFoundation\Request;
-use App\Repository\MedecinRepository;
-use App\Repository\OpinionsRepository;
-use App\Repository\PatientRepository;
-use App\Repository\PrescriptionRepository;
-use App\Repository\StayRepository;
-use App\Repository\UserRepository;
+use App\Entity\{Medication, Opinions, Prescription};
+use App\Repository\{
+    CalendarRepository,
+    DrugsRepository,
+    MedecinRepository,
+    OpinionsRepository,
+    PatientRepository,
+    PrescriptionRepository,
+    UserRepository
+};
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Error;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\{JsonResponse, Response, Request};
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -39,7 +36,6 @@ class ApiController extends AbstractController
         $user = $userRepo->findOneBy(['email' => $email]);
         /** var Medecin $medecin */
         $medecin = $medecinRepository->findByUser($user);
-        // dump($medecin);
         return new JsonResponse([
             'user_id'   =>  $medecin[0]->getId(),
             'firstName' =>  $medecin[0]->getUser()->getFirstName(),
@@ -74,15 +70,20 @@ class ApiController extends AbstractController
                     'medecin_id'    => $calendar->getMedecin()->getId(),
                 ];
             }
-            // dd($flatArray);
             $jsonList = $serializer->serialize(
                 $flatArray,
                 'json'
             );
-
             return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                [
+                    'error' =>
+                    'Une erreur s\'est produite : ' .
+                        $e->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
     /**
@@ -112,7 +113,6 @@ class ApiController extends AbstractController
                     'medecin_id'    => $calendar->getMedecin()->getId(),
                 ];
             }
-            // dd($flatArray);
             $jsonList = $serializer->serialize(
                 $flatArray,
                 'json'
@@ -120,7 +120,14 @@ class ApiController extends AbstractController
 
             return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                [
+                    'error' =>
+                    'Une erreur s\'est produite : ' .
+                        $e->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
     /**
@@ -149,10 +156,18 @@ class ApiController extends AbstractController
 
                 return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
             } else {
-                return new JsonResponse(['error' => 'Aucun utilisateur trouvé pour l\'identifiant ' . $id], Response::HTTP_NOT_FOUND);
+                return new JsonResponse([
+                    'error' =>
+                    'Aucun utilisateur trouvé pour l\'identifiant ' .
+                        $id
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => '[getInfoPatient ' . $id . '] Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse([
+                'error' =>
+                '[getInfoPatient ' . $id . '] Une erreur s\'est produite : ' .
+                    $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -215,15 +230,27 @@ class ApiController extends AbstractController
             return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
         } catch (\Exception $e) {
             return new JsonResponse(
-                ['error' => '[getPrescriptionPatient patient : ' . $data['patient_id'] . ' - medecin: ' . $data['medecin_id'] . '] Une erreur s est produite : ' . $e->getMessage()],
+                ['error' =>
+                '[getPrescriptionPatient patient : ' .
+                    $data['patient_id'] .
+                    ' - medecin: ' . $data['medecin_id'] . '] Une erreur s est produite : ' .
+                    $e->getMessage()],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
     }
+
+    #[Route('/api/getDrugs', name: 'api_get_drugs', methods: ['GET'])]
     /**
-     * Liste des medicaments 
+     *  Endpoint for retrieving a list of drugs.
+     *
+     * Retrieves a list of drugs from the database and serializes them into JSON format.
+     *
+     *
+     * @param SerializerInterface $serializer
+     * @param DrugsRepository $drugRepo
+     * @return JsonResponse
      */
-    #[Route('/api/getDrugs', name: 'api_get_drugs', methods: ['GET', 'POST'])]
     public function getDrugs(
         SerializerInterface $serializer,
         DrugsRepository $drugRepo
@@ -244,7 +271,14 @@ class ApiController extends AbstractController
 
             return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => '[getDrugs] Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                [
+                    'error' =>
+                    '[API getDrugs] Une erreur s\'est produite : ' .
+                        $e->getMessage()
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
     }
     /**
@@ -344,7 +378,7 @@ class ApiController extends AbstractController
     /**
      * Liste des avis sur un patients en fonction d'un docteur
      */
-    #[Route('/api/getOpinionsPatient', name: 'api_get_opinions_patient', methods: ['GET', 'POST'])]
+    #[Route('/api/getOpinionsPatient', name: 'api_get_opinions_patient', methods: ['GET'])]
     public function getOpinionsPatient(
         Request $request,
         OpinionsRepository $opinionRepo,
@@ -386,7 +420,12 @@ class ApiController extends AbstractController
 
             return new JsonResponse($jsonList, Response::HTTP_OK, [], true);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => '[getOpinionsPatient ] Une erreur s\'est produite : ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(
+                ['error' =>
+                '[getOpinionsPatient ] Une erreur s\'est produite : ' .
+                    $e->getMessage()],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
         return new JsonResponse([], Response::HTTP_OK, [], true);
     }

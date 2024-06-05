@@ -18,42 +18,40 @@ window.addEventListener("click", function (event) {
 });
 
 function getMedecins(event, staySpecialitySelected) {
-  console.log("getMedecins");
-
-  // axios bascule de https vers http ...
-  var url = "/" + this.value + "/medecins/";
-  console.log(url);
+  // Construire l'URL en fonction de la spécialité sélectionnée
+  const url = `/${this.value}/medecins/`;
   axios
     .get(url)
     .then((response) => {
       const divmedecinList = document.querySelector("div#blocMedecinList");
-      divmedecinList.textContent = "";
+      divmedecinList.textContent = ""; // Vider la liste existante
 
+      // Afficher la liste des médecins et masquer le bloc de sélection des dates
       blocMedecin.classList.remove("d-none");
       divmedecinList.classList.remove("bg-warning");
       blocDatesSelect.classList.add("d-none");
 
-      // liste déroulante medecin
+      // Créer la liste déroulante des médecins
       var selectList = document.createElement("select");
       selectList.id = "stay_medecin";
       selectList.name = "stay[medecin]";
 
-      // il n'y a pas de médecins de rattaché à la spe
+      // Gérer le cas où aucun médecin n'est disponible
       if (response.data.length == 0) {
         infoNoMedecin = document.createTextNode(
           "Aucun médecin n'est disponible dans cette spécialité"
         );
         divmedecinList.classList.add("bg-warning");
         divmedecinList.appendChild(infoNoMedecin);
-
-        selectList.classList.add("d-none");
+        selectList.classList.add("d-none"); // Masquer la liste vide
       } else {
-        // premiere valeur de la liste
+        // Option "Sélectionner un médecin" par défaut
         const option = document.createElement("option");
         option.value = "";
         option.text = "Veuillez sélectionner un médecin";
         selectList.appendChild(option);
 
+        // Ajouter une option pour chaque médecin
         response.data.forEach((medecin) => {
           const option = document.createElement("option");
           option.value = medecin.id;
@@ -61,6 +59,7 @@ function getMedecins(event, staySpecialitySelected) {
           selectList.appendChild(option);
         });
       }
+      // Ajouter la liste déroulante à la zone d'affichage
       divmedecinList.appendChild(selectList);
     })
     .catch((error) => {

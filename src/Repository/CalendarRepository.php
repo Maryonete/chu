@@ -79,7 +79,7 @@ class CalendarRepository extends ServiceEntityRepository
             ->getResult();
     }
     /**
-     * 
+     *
      *
      * @param DatetimeInterface $sdate : start date
      * @param DateTimeInterface $edate : end date

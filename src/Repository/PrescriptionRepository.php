@@ -20,7 +20,12 @@ class PrescriptionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Prescription::class);
     }
-    /** Liste les prescriptions d'un patient */
+    /**
+     * retourne toutes les prescriptions liées a un patient
+     *
+     * @param integer $idPatient
+     * @return array|null
+     */
     public function findAllPrescriptionByPatient(int $idPatient): ?array
     {
         return $this->createQueryBuilder('p')

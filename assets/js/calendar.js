@@ -6,29 +6,36 @@ import listPlugin from "@fullcalendar/list";
 import timepicker from "../js/jquery-timepicker.js";
 import "../styles/calendar.scss";
 
+// Fonction pour ajouter un séjour au calendrier
 function addStayToCalendar(cal) {
-  id = cal.value;
-  console.log("addStayToCalendar: " + id);
+  let id = cal.value; // Récupérer l'identifiant du séjour sélectionné
 
   if (id > 0) {
+    // Créer une nouvelle requête XMLHttp
     let xmlHttp = new XMLHttpRequest();
 
+    // Définir la fonction de rappel pour gérer la réponse de la requête
     xmlHttp.onreadystatechange = () => {
+      // Vérifier si la requête est terminée et la réponse est prête
       if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+        // Parser les données JSON de la réponse
         let Data = JSON.parse(xmlHttp.responseText);
-        console.log(Data);
-        document.querySelector("input#calendar_title").value = Data[0].title;
 
+        // Mettre à jour les champs du calendrier avec les données du séjour
+        document.querySelector("input#calendar_title").value = Data[0].title;
         document.querySelector("textarea#calendar_description").value =
           Data[0].description;
       }
     };
-    url = "/admin/" + id + "/stay";
+    // Construire l'URL de la requête en fonction de l'identifiant du séjour
+    let url = "/admin/" + id + "/stay";
+    // Ouvrir la requête GET asynchrone vers l'URL spécifiée
     xmlHttp.open("get", url, true);
+    // Envoyer la requête
     xmlHttp.send(null);
   } else {
+    // Réinitialiser les champs du calendrier si l'identifiant est invalide
     document.querySelector("input#calendar_title").value = "";
-
     document.querySelector("textarea#calendar_description").value = "";
   }
 }
