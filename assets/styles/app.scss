@@ -60,12 +60,6 @@ main {
   }
 }
 
-// Styles pour les erreurs de formulaire
-div.form-error {
-  color: $alert;
-  padding: 1em;
-}
-
 // Styles pour le footer
 .footer {
   color: #ffffff;
@@ -178,9 +172,9 @@ i.avenir {
 
 // Styles pour les erreurs de formulaire
 .form-errors {
-  color: white;
+  color: red;
+  padding-top: 1.2em;
   font-size: 14px;
-  background-color: #ffcccc;
 }
 
 .form-errors li {
@@ -189,7 +183,7 @@ i.avenir {
 }
 
 .field-errors,
-.form-error-message {
+.form-errors-message {
   color: red;
   font-size: 14px;
 }

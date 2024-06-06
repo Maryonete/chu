@@ -47,7 +47,7 @@ body %}
               </span>
             </span>
           </div>
-          <div class="form-error">
+          <div class="form-errors">
             {{ form_errors(form.start_date) }}
           </div>
         </div>
@@ -62,7 +62,7 @@ body %}
               </span>
             </span>
           </div>
-          <div class="form-error">
+          <div class="form-errors">
             {{ form_errors(form.end_date) }}
           </div>
         </div>
@@ -70,7 +70,7 @@ body %}
       <div class="form-group mb-3">
         {{ form_label(form.reason) }}
         {{ form_widget(form.reason) }}
-        <div class="form-error">
+        <div class="form-errors">
           {{ form_errors(form.reason) }}
         </div>
       </div>
@@ -78,7 +78,7 @@ body %}
       <div class="form-group">
         {{ form_label(form.description) }}
         {{ form_widget(form.description) }}
-        <div class="form-error">
+        <div class="form-errors">
           {{ form_errors(form.description) }}
         </div>
       </div>
