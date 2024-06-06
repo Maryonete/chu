@@ -7,6 +7,13 @@
   <div class="row justify-content-md-center mb-4">
     <div class="col-6">
       <h1>Mise à jour de mes données</h1>
+      <div class="form-group">
+        {{ form_label(form.user.email) }}
+        {{ form_widget(form.user.email) }}
+        <div class="form-error text-danger">
+          {{ form_errors(form.user.email) }}
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">

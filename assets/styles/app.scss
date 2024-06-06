@@ -1,3 +1,7 @@
+// Importation de Bootstrap SCSS depuis node_modules
+@import "~bootstrap/scss/bootstrap";
+
+// Définition des couleurs personnalisées
 $primary: #124660;
 $secondary: #1b9476;
 $success: #c7dbc2;
@@ -5,14 +9,12 @@ $tertiary: #8bd59e;
 $vertPomme: #8fb43a;
 $alert: #c6303e;
 
-// the ~ allows you to reference things in node_modules
-@import "~bootstrap/scss/bootstrap";
-
-/** Elements page HTML */
+// Styles globaux
 html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   background-color: #f8f9fa; /* Couleur de fond */
   display: flex;
@@ -21,71 +23,105 @@ body {
   margin: 0;
   font-family: "Segoe UI", Roboto;
 }
+
+* {
+  margin: 0;
+}
+
+// Styles pour le header
 header {
   border-bottom: 1px solid #e5e9ef;
 }
 
+// Styles pour le main
 main {
   flex-grow: 1; /* Prend le reste de l'espace disponible */
 }
+
+// Styles pour les éléments spécifiques
 .logo-img {
   height: 64px;
 }
+/* Buttons */
+.btn.btn-primary,
+.btn.btn-success {
+  color: #fff; /* Text color */
+  background-color: $primary; /* Background color */
+  border-color: $primary; /* Border color */
+}
+// Styles pour la navbar
+.navbar-brand {
+  min-width: 180px;
+}
+.navbar {
+  background-color: $primary !important; // Utilisez !important pour assurer la priorité
+  .nav-link {
+    color: white;
+  }
+}
+
+// Styles pour les erreurs de formulaire
 div.form-error {
   color: $alert;
   padding: 1em;
 }
-.navbar-brand {
-  min-width: 180px;
-}
+
+// Styles pour le footer
 .footer {
   color: #ffffff;
   padding: 20px;
   border-top: 1px solid #e5e9ef;
 }
+
 footer a.nav-link {
   font-size: 1rem;
 }
-* {
-  margin: 0;
-}
 
-#calendrier {
-  width: 80%;
-  margin: auto;
-}
-p.lead{
-  text-align: justify;
-}
-.input-group-append {
-  cursor: pointer;
-}
-/** */
-label.required:before {
-  content: "* ";
-  color: red;
-}
+// Styles pour les liens et typographie
 a {
   font-family: Georgia, sans-serif;
   font-size: 20px;
   text-decoration: none;
 }
+
 h1,
 h2,
 h3 {
   font-family: Georgia;
-  color: RGBA(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
+  color: $primary !important;
 }
+
 h1 {
   font-size: 2.5rem;
   text-align: left;
   padding: 1em 1em 1em 0;
 }
-h2{
+
+h2 {
   font-size: 1.8rem;
 }
 
-/** Barre de MENU */
+p.lead {
+  text-align: justify;
+}
+
+.input-group-append {
+  cursor: pointer;
+}
+
+// Styles spécifiques pour le calendrier
+#calendrier {
+  width: 80%;
+  margin: auto;
+}
+
+// Styles pour les labels requis
+label.required:before {
+  content: "* ";
+  color: red;
+}
+
+// Styles pour la barre de menu
 .lavish {
   font-family: "Lavishly Yours", cursive;
 }
@@ -93,40 +129,71 @@ h2{
 .customSubMenuHolder:hover > .customSubMenu {
   display: block;
 }
+
 .customSubMenu {
   display: none;
   box-shadow: 2px 8px 12px rgba(0, 0, 0, 0.5);
   position: absolute;
   width: 100%;
   left: 0;
-  background: #00354b;
+  background: $primary;
 }
+
 a.nav-link {
   font-size: 1.1rem;
   color: white;
 }
-/** SEJOURS : STAY */
+
+// Styles spécifiques pour les séjours (STAY)
 .selectItem {
   background-color: #dcdfda;
 }
+
 tr.encours td,
 tr.encours th {
   background-color: $vertPomme;
 }
+
 i.encours {
   color: $vertPomme;
 }
+
 tr.passe td,
 tr.passe th {
   background-color: $secondary;
 }
+
 i.passe {
   color: $secondary;
 }
+
 tr.avenir td,
 tr.avenir th {
   background-color: $tertiary;
 }
+
 i.avenir {
   color: $tertiary;
+}
+
+// Styles pour les erreurs de formulaire
+.form-errors {
+  color: white;
+  font-size: 14px;
+  background-color: #ffcccc;
+}
+
+.form-errors li {
+  list-style-type: none; /* Supprime les puces */
+  margin-bottom: 5px; /* Espacement entre les erreurs */
+}
+
+.field-errors,
+.form-error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.field-errors li {
+  list-style-type: none; /* Supprime les puces */
 }
