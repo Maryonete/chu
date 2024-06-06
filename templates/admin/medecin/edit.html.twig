@@ -15,21 +15,21 @@ block body %}
       <div class="form-group">
         {{ form_label(form.user.lastname) }}
         {{ form_widget(form.user.lastname) }}
-        <div class="form-error">
+        <div class="form-errors">
           {{ form_errors(form.user.lastname) }}
         </div>
       </div>
       <div class="form-group">
         {{ form_label(form.user.firstname) }}
         {{ form_widget(form.user.firstname) }}
-        <div class="form-error">
+        <div class="form-errors">
           {{ form_errors(form.user.firstname) }}
         </div>
       </div>
       <div class="form-group">
         {{ form_label(form.user.email) }}
         {{ form_widget(form.user.email) }}
-        <div class="form-error">
+        <div class="form-errors">
           {{ form_errors(form.user.email) }}
         </div>
       </div>
@@ -40,7 +40,7 @@ block body %}
           <li>{{ form_widget(i) }} {{ form_label(i) }}</li>
           {% endfor %}
         </ul>
-        <div class="form-error">
+        <div class="form-errors">
           {{ form_errors(form.speciality) }}
         </div>
       </div>

@@ -37,7 +37,8 @@ class RegistrationFormType extends AbstractType
                     new Assert\NotBlank([
                         'message' => 'Veuillez saisir votre email'
                     ])
-                ]
+                ],
+                'invalid_message' => 'Please enter a valid email address.',
             ])
             ->add('lastname', TextType::class, [
                 'attr'  => [
@@ -110,33 +111,6 @@ class RegistrationFormType extends AbstractType
                     ],
 
                     'invalid_message' => 'Les mots de passe ne correspondent pas',
-                    // Instead of being set onto the object directly,
-                    // this is read and encoded in the controller
-
-                    // 'options' => [
-                    //     'attr' => [
-                    //         'autocomplete' => 'new-password',
-                    //     ],
-                    // ],
-                    // 'attr'      => [
-                    //     'autocomplete'  => 'new-password',
-                    //     'class'         =>  'form-control',
-                    // ],
-                    // 'label'         =>  'Mot de passe',
-                    // 'label_attr'    =>  [
-                    //     'class'     =>  'col-form-label'
-                    // ],
-                    // 'constraints' => [
-                    //     new NotBlank([
-                    //         'message' => 'Veuillez saisir un mot de passe',
-                    //     ]),
-                    //     new Length([
-                    //         'min' => 6,
-                    //         'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractéres',
-                    //         // max length allowed by Symfony for security reasons
-                    //         'max' => 4096,
-                    //     ]),
-                    // ],
                 ]
             );
     }

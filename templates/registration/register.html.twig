@@ -16,7 +16,7 @@ endblock %} {% block body %}
               <div class="form-group">
                 {{ form_label(registrationForm.email) }}
                 {{ form_widget(registrationForm.email) }}
-                <div class="form-error text-danger">
+                <div class="form-errors text-danger">
                   {{ form_errors(registrationForm.email) }}
                 </div>
               </div>
@@ -40,11 +40,23 @@ endblock %} {% block body %}
                   </div>
                 </div>
                 <div class="col-md-12">
-                  <p>
-                    Votre mot de passe doit comporter au moins 8 caractères et
-                    inclure au moins une lettre majuscule, une lettre minuscule,
-                    un chiffre et un caractère spécial.
-                  </p>
+                  <div class="row indicator mb-3" id="complexityIndicator">
+                    <div class="col-md-4">
+                      <div id="uppercaseIndicator">1 majuscule</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="lowercaseIndicator">1 minuscule</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="intcaseIndicator">1 chiffre</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="specialCharIndicator">1 caractére spécial</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="lengthIndicator">8 caractères minimum</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -57,7 +69,7 @@ endblock %} {% block body %}
                   <div class="form-group">
                     {{ form_label(registrationForm.lastname) }}
                     {{ form_widget(registrationForm.lastname) }}
-                    <div class="form-error text-danger">
+                    <div class="form-errors text-danger">
                       {{ form_errors(registrationForm.lastname) }}
                     </div>
                   </div>
@@ -66,7 +78,7 @@ endblock %} {% block body %}
                   <div class="form-group">
                     {{ form_label(registrationForm.firstname) }}
                     {{ form_widget(registrationForm.firstname) }}
-                    <div class="form-error text-danger">
+                    <div class="form-errors text-danger">
                       {{ form_errors(registrationForm.firstname) }}
                     </div>
                   </div>
@@ -75,7 +87,7 @@ endblock %} {% block body %}
               <div class="form-group">
                 {{ form_label(registrationForm.patient.adlibelle) }}
                 {{ form_widget(registrationForm.patient.adlibelle) }}
-                <div class="form-error">
+                <div class="form-errors">
                   {{ form_errors(registrationForm.patient.adlibelle) }}
                 </div>
               </div>
@@ -84,25 +96,23 @@ endblock %} {% block body %}
                   <div class="form-group">
                     {{ form_label(registrationForm.patient.adcp) }}
                     {{ form_widget(registrationForm.patient.adcp) }}
-                    <div class="form-error">
-                      {{ form_errors(registrationForm.patient.adcp) }}
-                    </div>
                   </div>
                 </div>
                 <div class="col-8">
                   <div class="form-group">
                     {{ form_label(registrationForm.patient.adcity) }}
                     {{ form_widget(registrationForm.patient.adcity) }}
-                    <div class="form-error">
-                      {{ form_errors(registrationForm.patient.adcity) }}
-                    </div>
                   </div>
                 </div>
+              </div>
+              <div class="form-errors">
+                {{ form_errors(registrationForm.patient.adcp) }}
+                {{ form_errors(registrationForm.patient.adcity) }}
               </div>
               <div class="form-group">
                 {{ form_label(registrationForm.patient.adcountry) }}
                 {{ form_widget(registrationForm.patient.adcountry) }}
-                <div class="form-error">
+                <div class="form-errors">
                   {{ form_errors(registrationForm.patient.adcountry) }}
                 </div>
               </div>
@@ -134,4 +144,8 @@ endblock %} {% block body %}
   </div>
 </div>
 
+{% endblock %} {% block javascripts %}
+
+{{ parent() }}
+<script src="{{ asset('build/js/verif-pwd.js') }}" defer></script>
 {% endblock %}

@@ -47,7 +47,21 @@ class PatientType extends AbstractType
                     new Assert\Length(['min' => 2, 'max' => 50]),
                     new Assert\NotBlank([
                         'message' => 'Veuillez saisir votre code postal'
-                    ])
+                    ]),
+                    new Assert\Callback([
+                        'callback' => function ($value, $context) {
+                            // Vérifier si le pays est la France
+                            $country = $context->getRoot()->get('patient')->get('adcountry')->getData();
+                            if ($country === 'FR') { // Utilisation de FR pour la France
+                                // Vérifier le format du code postal
+                                if (!preg_match('/^\d{5}$/', $value)) {
+                                    $context
+                                        ->buildViolation('Le code postal doit contenir cinq chiffres')
+                                        ->addViolation();
+                                }
+                            }
+                        },
+                    ]),
                 ]
             ])
             ->add('adcity', TextType::class, [
@@ -64,6 +78,25 @@ class PatientType extends AbstractType
                     new Assert\Length(['min' => 2, 'max' => 50]),
                     new Assert\NotBlank([
                         'message' => 'Veuillez saisir votre ville'
+                    ])
+                ]
+            ])
+            ->add('adcountry', CountryType::class, [
+                'preferred_choices' => array('FR'),
+                'choice_translation_locale' => null,
+                'attr'  => [
+                    'class'     =>  'form-control',
+                    'minlength' => '2',
+                    'maxlength' => '50',
+                ],
+                'label'         =>  'Pays',
+                'label_attr'    =>  [
+                    'class'     =>  'col-form-label'
+                ],
+                'constraints'   => [
+                    new Assert\Length(['min' => 2, 'max' => 50]),
+                    new Assert\NotBlank([
+                        'message' => 'Veuillez saisir votre pays'
                     ])
                 ]
             ])
