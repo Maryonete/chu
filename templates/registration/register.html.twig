@@ -40,11 +40,23 @@ endblock %} {% block body %}
                   </div>
                 </div>
                 <div class="col-md-12">
-                  <p>
-                    Votre mot de passe doit comporter au moins 8 caractères et
-                    inclure au moins une lettre majuscule, une lettre minuscule,
-                    un chiffre et un caractère spécial.
-                  </p>
+                  <div class="row indicator mb-3" id="complexityIndicator">
+                    <div class="col-md-4">
+                      <div id="uppercaseIndicator">1 majuscule</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="lowercaseIndicator">1 minuscule</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="intcaseIndicator">1 chiffre</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="specialCharIndicator">1 caractére spécial</div>
+                    </div>
+                    <div class="col-md-4">
+                      <div id="lengthIndicator">8 caractères minimum</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -134,4 +146,8 @@ endblock %} {% block body %}
   </div>
 </div>
 
+{% endblock %} {% block javascripts %}
+
+{{ parent() }}
+<script src="{{ asset('build/js/verif-pwd.js') }}" defer></script>
 {% endblock %}

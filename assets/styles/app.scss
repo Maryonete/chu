@@ -197,3 +197,15 @@ i.avenir {
 .field-errors li {
   list-style-type: none; /* Supprime les puces */
 }
+/* Password */
+.indicator {
+  margin-top: 20px;
+}
+
+.valid {
+  color: green;
+}
+
+.invalid {
+  color: grey;
+}
