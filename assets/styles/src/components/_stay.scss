@@ -1,0 +1,31 @@
+// Styles spécifiques pour les séjours (STAY)
+.selectItem {
+  background-color: #dcdfda;
+}
+
+tr.encours td,
+tr.encours th {
+  background-color: $vertPomme;
+}
+
+i.encours {
+  color: $vertPomme;
+}
+
+tr.passe td,
+tr.passe th {
+  background-color: $secondary;
+}
+
+i.passe {
+  color: $secondary;
+}
+
+tr.avenir td,
+tr.avenir th {
+  background-color: $tertiary;
+}
+
+i.avenir {
+  color: $tertiary;
+}

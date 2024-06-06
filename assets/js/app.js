@@ -1,3 +1,3 @@
 require("bootstrap");
 
-import "../styles/app.min.css";
+import "../styles/main.min.css";

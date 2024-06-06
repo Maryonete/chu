@@ -1,0 +1,11 @@
+// Styles pour la navbar
+.navbar-brand {
+  min-width: 180px;
+}
+
+.navbar {
+  background-color: $primary !important;
+  .nav-link {
+    color: white;
+  }
+}

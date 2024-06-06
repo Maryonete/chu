@@ -1,0 +1,21 @@
+// Réinitialisation des styles
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Segoe UI", Roboto;
+}
+
+* {
+  margin: 0;
+}
+main {
+  flex-grow: 1; /* Prend le reste de l'espace disponible */
+}
