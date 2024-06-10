@@ -1,0 +1,11 @@
+@import "../base/_variables.scss";
+
+// Styles des formulaires
+.input-group-append {
+  cursor: pointer;
+}
+
+label.required:before {
+  content: "* ";
+  color: $red;
+}

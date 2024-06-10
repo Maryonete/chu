@@ -1,0 +1,21 @@
+// Styles pour les formulaires
+.form-errors {
+  color: red;
+  padding-top: 1.2em;
+  font-size: 14px;
+}
+
+.form-errors li {
+  list-style-type: none;
+  margin-bottom: 5px;
+}
+
+.field-errors,
+.form-errors-message {
+  color: red;
+  font-size: 14px;
+}
+
+.field-errors li {
+  list-style-type: none;
+}

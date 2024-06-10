@@ -61,7 +61,7 @@ class AppFixtures extends Fixture
         // ADMIN
         $admin = new User();
         $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setPassword($this->encoder->hashPassword($admin, 'test'));
+        $admin->setPassword($this->encoder->hashPassword($admin, 'Bx?U86!eadm'));
         $admin->setFirstName('Admin');
         $admin->setLastName('Admin');
         $admin->setEmail('admin@studi.fr');
@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
         // SECRETAIRE
         $staff = new User();
         $staff->setRoles(['ROLE_STAFF']);
-        $staff->setPassword($this->encoder->hashPassword($staff, 'test'));
+        $staff->setPassword($this->encoder->hashPassword($staff, 'Bx?U86!estaf'));
         $staff->setFirstName('staff');
         $staff->setLastName('Secretaire');
         $staff->setEmail('staff@studi.fr');
@@ -82,7 +82,7 @@ class AppFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_MEDECIN']);
             // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
-            $user->setPassword($this->encoder->hashPassword($user, 'test'));
+            $user->setPassword($this->encoder->hashPassword($user, 'Bx?U86!edoc'));
             $user->setFirstName($this->faker->firstName());
             $user->setLastName($this->faker->lastName());
 
@@ -103,7 +103,7 @@ class AppFixtures extends Fixture
             $user = new User();
             $user->setRoles(['ROLE_USER']);
             // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
-            $user->setPassword($this->encoder->hashPassword($user, 'test'));
+            $user->setPassword($this->encoder->hashPassword($user, 'Bx?U86!epat'));
             $user->setFirstName($this->faker->firstName());
             $user->setLastName($this->faker->lastName());
             $user->setEmail($this->faker->email());

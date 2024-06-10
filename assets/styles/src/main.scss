@@ -1,0 +1,21 @@
+// Importation de Bootstrap SCSS depuis node_modules
+@import "~bootstrap/scss/bootstrap";
+
+// Importation des fichiers SCSS de base
+@import "base/reset"; // Réinitialisation des styles par défaut du navigateur
+@import "base/variables"; // Variables globales utilisées dans tout le projet
+@import "base/forms"; // Styles de base pour les formulaires
+@import "base/typography"; // Styles de base pour la typographie
+
+// Importation des fichiers SCSS de mise en page
+@import "layout/header"; // Styles pour l'en-tête
+@import "layout/footer"; // Styles pour le pied de page
+@import "layout/navbar"; // Styles pour la barre de navigation
+
+// Importation des fichiers SCSS des composants
+@import "components/buttons"; // Styles pour les boutons
+@import "components/forms"; // Styles pour les composants de formulaire
+@import "components/calendar"; // Styles pour le calendrier
+@import "components/navbar"; // Styles spécifiques pour la barre de navigation (si nécessaire)
+@import "components/password"; // Styles pour les indicateurs de mot de passe
+@import "components/stay"; // Styles spécifiques pour les séjours
