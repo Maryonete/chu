@@ -378,7 +378,7 @@ class ApiController extends AbstractController
     /**
      * Liste des avis sur un patients en fonction d'un docteur
      */
-    #[Route('/api/getOpinionsPatient', name: 'api_get_opinions_patient', methods: ['GET'])]
+    #[Route('/api/getOpinionsPatient', name: 'api_get_opinions_patient', methods: ['GET', 'POST'])]
     public function getOpinionsPatient(
         Request $request,
         OpinionsRepository $opinionRepo,
