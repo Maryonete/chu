@@ -1,6 +1,5 @@
 # Hospital SoigneMoi
 
-
 ## Description
 
 SoigneMoi is an application developed by **Develop-Solution** for the SoigneMoi hospital, located in the Lille region of France. This application aims to improve the efficiency of the hospital by providing computerized tools for managing admissions, stays, and medical prescriptions.
@@ -119,8 +118,8 @@ ou
 - **Patient**:
 
   - Email: john.do@test.fr
-  - Password: test
+  - Password: Bx?U86!epat
 
 - **Administrator**:
   - Email: admin@studi.fr
-  - Password: test
+  - Password: Bx?U86!eadm
