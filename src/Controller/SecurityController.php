@@ -66,7 +66,7 @@ class SecurityController extends AbstractController
 
         // Fetch user from repository by email
         $user = $userRepository->findOneBy(['email' => $email]);
-        error_log('loginApi : ' . var_export($user, true));
+        // error_log('loginApi : ' . var_export($user, true));
         // Check user existence and password validity
         if (!$user || !password_verify($password, $user->getPassword())) {
             throw new AuthenticationException('Invalid credentials');
