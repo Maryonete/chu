@@ -102,7 +102,6 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 10; $i++) {
             $user = new User();
             $user->setRoles(['ROLE_USER']);
-            // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
             $user->setPassword($this->encoder->hashPassword($user, 'Bx?U86!epat'));
             $user->setFirstName($this->faker->firstName());
             $user->setLastName($this->faker->lastName());
