@@ -48,12 +48,12 @@ class Medecin
     {
         return [
             "id" => $this->getId(),
-            "name" => $this->getUser()->getLastName() . "  " . $this->getUser()->getFirstName(),
+            "name" => $this->getUser()->getLastName() . " " . $this->getUser()->getFirstName(),
         ];
     }
     public function __toString()
     {
-        return $this->getUser()->getLastName() . "  " . $this->getUser()->getFirstName();
+        return $this->getUser()->getLastName() . " " . $this->getUser()->getFirstName();
     }
 
     public function getId(): ?int

@@ -2,34 +2,22 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Medecin;
-use App\Entity\Patient;
-use App\Entity\User;
+use App\Entity\{User, Medecin, Patient};
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Metadata\Covers;
 
-/**
- * Class UserTest.
- *
- * @covers \App\Entity\User
- */
+#[Covers(User::class)]
 final class UserTest extends TestCase
 {
     private User $user;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->user = new User();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();

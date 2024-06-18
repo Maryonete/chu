@@ -7,33 +7,22 @@ use App\Entity\Speciality;
 use Doctrine\Common\Collections\Collection;
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Metadata\Covers;
 
-/**
- * Class SpecialityTest.
- *
- * @covers \App\Entity\Speciality
- */
+#[Covers(Speciality::class)]
 final class SpecialityTest extends TestCase
 {
     private Speciality $speciality;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->speciality = new Speciality();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
-
         unset($this->speciality);
     }
 

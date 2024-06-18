@@ -98,7 +98,7 @@
         ]
     },
     "phpunit/phpunit": {
-        "version": "9.6",
+        "version": "11.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -258,21 +258,6 @@
             "version": "1.0",
             "ref": "292a3236e81f55b545b09b9954ab097248972ab3"
         }
-    },
-    "symfony/phpunit-bridge": {
-        "version": "7.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "6.3",
-            "ref": "a411a0480041243d97382cac7984f7dce7813c08"
-        },
-        "files": [
-            "./.env.test",
-            "./bin/phpunit",
-            "./phpunit.xml.dist",
-            "./tests/bootstrap.php"
-        ]
     },
     "symfony/routing": {
         "version": "6.4",

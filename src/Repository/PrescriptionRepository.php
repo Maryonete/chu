@@ -21,7 +21,7 @@ class PrescriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Prescription::class);
     }
     /**
-     * retourne toutes les prescriptions liées a un patient
+     * retourne toutes les prescriptions liées à un patient
      *
      * @param integer $idPatient
      * @return array|null

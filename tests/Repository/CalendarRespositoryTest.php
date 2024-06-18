@@ -2,11 +2,12 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Calendar;
-use App\Entity\Medecin;
-use App\Repository\CalendarRepository;
 use DateTime;
+use App\Entity\Medecin;
+use App\Entity\Calendar;
 use Doctrine\ORM\EntityManager;
+use App\Repository\CalendarRepository;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CalendarRespositoryTest extends KernelTestCase
@@ -20,9 +21,8 @@ class CalendarRespositoryTest extends KernelTestCase
             ->get('doctrine')
             ->getManager();
     }
-    /**
-     * @dataProvider datesProvider
-     */
+
+    #[DataProvider('datesProvider')]
     public function testCountDays($dateS, $dateE, $expected): void
     {
         $dates = $this->entityManager
@@ -31,7 +31,7 @@ class CalendarRespositoryTest extends KernelTestCase
 
         $this->assertSame($expected, count($dates));
     }
-    public function datesProvider()
+    public static function datesProvider()
     {
         return [
             [new DateTime('2021-01-01'), new DateTime('2021-01-05'), 4],
@@ -65,15 +65,10 @@ class CalendarRespositoryTest extends KernelTestCase
 
         $this->assertEmpty($result);
     }
-    /**
-     * {@inheritdoc}
-     */
+
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
-        // $this->entityManager = null;
     }
 }

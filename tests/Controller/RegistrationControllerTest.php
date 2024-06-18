@@ -4,10 +4,7 @@ namespace App\Tests\Controller;
 
 use Symfony\Component\Panther\PantherTestCase;
 use Symfony\Component\Panther\Client;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Csrf\CsrfToken;
 
 class RegistrationControllerTest extends PantherTestCase
 {

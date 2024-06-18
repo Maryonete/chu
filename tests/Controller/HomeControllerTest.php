@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -46,19 +47,14 @@ final class HomeControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', 'Espace patient CHU SoigneMoi');
     }
-    /**
-     * PHPUnit's data providers allow to execute the same tests repeated times
-     * using a different set of data each time.
-     *
-     * @dataProvider getPublicUrls
-     */
+    #[DataProvider('getPublicUrls')]
     public function testPublicUrls(string $url): void
     {
         $this->client->request('GET', $url);
 
         $this->assertResponseIsSuccessful(sprintf('The %s public URL loads correctly.', $url));
     }
-    public function getPublicUrls(): \Generator
+    public static function getPublicUrls(): \Generator
     {
         yield ['/'];
         yield ['/mentions_legales'];

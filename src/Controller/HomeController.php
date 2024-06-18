@@ -41,7 +41,6 @@ class HomeController extends AbstractController
         return $this->render('pages/home.html.twig', [
             'specialites'   =>  $speRepo->findBy([], ['name' => 'ASC']),
             'medecins'      =>  $medecinRepo->findAll(),
-
         ]);
     }
     #[Route('/speciality', name: 'app_speciality_list')]

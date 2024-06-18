@@ -21,7 +21,6 @@
         </thead>
         <tbody>
           {% for sejour in sejours %}
-
           <tr class="{{ sejour.etat }}">
             <th scope="row">{{ sejour.reason }}</th>
             <td>{{ sejour.speciality.name }}</td>
@@ -32,16 +31,19 @@
             <td>{{ sejour.startdate|date("d/m/Y") }}</td>
             <td>{{ sejour.enddate|date("d/m/Y") }}</td>
             <td>
-              {% if sejour.isValidate %} confirmé {% else %} en attente de
-              confirmation {% endif %}
+              {{
+                sejour.isValidate ? "confirmé" : "en attente de confirmation"
+              }}
             </td>
             <td class="text-center">
-              <a href="{{ path('app_sejour_show', { id: sejour.id }) }}"
-                ><i class="fa-solid fa-circle-info"></i
-              ></a>
+              <a
+                href="{{ path('app_sejour_show', { id: sejour.id }) }}"
+                alt="Visualiser le séjour"
+              >
+                <i class="fa-solid fa-circle-info"></i>
+              </a>
             </td>
           </tr>
-
           {% endfor %}
         </tbody>
       </table>

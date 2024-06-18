@@ -1,11 +1,1 @@
-@import "https://fonts.googleapis.com/css?family=Muli:400,900&display=swap";
-#calendar {
-  font-family: "Muli", sans-serif;
-  width: 800px;
-  margin: 0 auto;
-}
-td.fc-day .disabled {
-  background-color: #b3bac0;
-  color: #fff;
-  cursor: not-allowed;
-} /*# sourceMappingURL=calendar.min.css.map */
+@import"https://fonts.googleapis.com/css?family=Muli:400,900&display=swap";#calendar{font-family:"Muli",sans-serif;width:800px;margin:0 auto}td.fc-day .disabled{background-color:#b3bac0;color:#fff;cursor:not-allowed}/*# sourceMappingURL=calendar.min.css.map */

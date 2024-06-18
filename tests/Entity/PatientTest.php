@@ -8,19 +8,13 @@ use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use ReflectionClass;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Metadata\Covers;
 
-/**
- * Class PatientTest.
- *
- * @covers \App\Entity\Patient
- */
+#[Covers(Patient::class)]
 final class PatientTest extends TestCase
 {
     private Patient $patient;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,9 +22,6 @@ final class PatientTest extends TestCase
         $this->patient = new Patient();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -68,13 +59,6 @@ final class PatientTest extends TestCase
         $this->patient->setAdcp($adCP);
         self::assertSame($adCP, $this->patient->getAdcp());
     }
-
-    // public function testSetWrongAdcp(): void
-    // {
-    //     $expected = 'aaaaaaaaaaaaaaaaaaaaaa';
-    //     $this->patient->setAdcp($expected);
-    //     self::assertSame($expected, $this->patient->getAdcp());
-    // }
 
     public function testGetAndSetAdcity(): void
     {
