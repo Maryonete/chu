@@ -24,12 +24,7 @@ class AdminControllerTest extends WebTestCase
         $user = $userRepo->findOneByEmail('admin@studi.fr');
         $this->client->loginUser($user);
     }
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        // Restaurer l'état après le test, par exemple en enlevant les gestionnaires d'exceptions
-        // $this->client->getContainer()->get('your.exception.handler')->remove();
-    }
+
     /**
      * Save a rdv in medecin calendar
      */

@@ -202,7 +202,7 @@ final class PatientTest extends TestCase
         $medecin = new Medecin();
         $user->setMedecin($medecin);
         $medecin->getUser()->setFirstname('Dr. Firstname')->setLastname('Lastname');
-        $idMedecin = $patient->getId();
+        $idMedecin = $medecin->getId();
 
         $stay1->method('getMedecin')->willReturn($medecin);
 
