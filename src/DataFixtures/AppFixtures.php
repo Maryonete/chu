@@ -220,12 +220,11 @@ class AppFixtures extends Fixture
         // 1. création du médecin test
         $user = new User();
         $user->setRoles(['ROLE_MEDECIN']);
-        $user->setPassword($this->encoder->hashPassword($user, 'test'));
+        $user->setPassword($this->encoder->hashPassword($user, 'Bx?U86!edoc'));
         $user->setFirstName($this->faker->firstName());
         $user->setLastName($this->faker->lastName());
         $user->setEmail($nb . 'medecin@studi.fr');
         $manager->persist($user);
-        // dump('loadMedecinTest %s', $user->getEmail());
         $medecin = new Medecin();
         $medecin->setUser($user);
 
@@ -245,7 +244,7 @@ class AppFixtures extends Fixture
 
             $user = new User();
             $user->setRoles(['ROLE_USER']);
-            $user->setPassword($this->encoder->hashPassword($user, 'test'));
+            $user->setPassword($this->encoder->hashPassword($user, 'Bx?U86!epat'));
             $user->setFirstName($this->faker->firstName());
             $user->setLastName($this->faker->lastName());
             // utilisé pour les tests

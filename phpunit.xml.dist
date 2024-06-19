@@ -19,6 +19,9 @@
     </testsuite>
   </testsuites>
   <source>
+  <exclude>
+      <directory suffix=".php">src/DataFixtures</directory>
+    </exclude>
     <include>
       <directory suffix=".php">src</directory>
     </include>

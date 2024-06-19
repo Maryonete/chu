@@ -4,14 +4,15 @@ namespace App\Tests\Entity;
 
 use DateTime;
 use TypeError;
-use App\Entity\{Medecin, Patient, Speciality, Stay, User};
 use ReflectionClass;
+use PHPUnit\Metadata\Covers;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use App\Entity\{Medecin, Patient, Speciality, Stay, User};
 
-#[Covers(Stay::class)]
 final class StayTest extends TestCase
 {
+    #[Covers(Stay::class)]
     private static Stay $stay;
 
     protected function setUp(): void
