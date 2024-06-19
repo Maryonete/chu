@@ -98,13 +98,16 @@ class HomeController extends AbstractController
     #[Route('/sitemap.xml', name: 'sitemap', methods: ['GET'])]
     public function sitemap(): Response
     {
-        $sitemapContent = $this->renderView('sitemap/index.xml.twig', [
-            // Pass any necessary data to your sitemap template
-        ]);
+        $sitemapContent = $this->renderView('seo/sitemap.xml.twig');
 
         // Return the sitemap XML as a response
         return new Response($sitemapContent, 200, [
             'Content-Type' => 'application/xml'
         ]);
+    }
+    #[Route('/robots.txt', name: 'robots_txt', methods: ['GET'])]
+    public function robots(): Response
+    {
+        return $this->render('seo/robots.txt.twig');
     }
 }
