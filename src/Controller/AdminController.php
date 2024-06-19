@@ -74,7 +74,6 @@ class AdminController extends AbstractController
             ],
         ]);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
 
             /** @var Calendar $calendar */
@@ -82,9 +81,9 @@ class AdminController extends AbstractController
             $calendar->setStart(new DateTime($request->get('start') . ' ' . $request->get('startHeure')));
             $calendar->setEnd(new DateTime($request->get('end') . ' ' . $request->get('endHeure')));
             $calendar->setMedecin($medecin);
-
             // Calendrier relié a un séjour patient
             if ($request->get('stay') !== null) {
+
                 /** @var Stay $stay */
                 $stay = $stayRepo->find($request->get('stay'));
                 $stay->setValidate(true);

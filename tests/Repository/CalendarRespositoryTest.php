@@ -3,6 +3,7 @@
 namespace App\Tests\Repository;
 
 use DateTime;
+use App\Entity\User;
 use App\Entity\Medecin;
 use App\Entity\Calendar;
 use Doctrine\ORM\EntityManager;
@@ -64,6 +65,58 @@ class CalendarRespositoryTest extends KernelTestCase
         $result = $calendarRepository->getDaysBusy($medecin);
 
         $this->assertEmpty($result);
+    }
+    public function testFindPatientsOfTodayByMedecin(): void
+    {
+        // Créez un médecin fictif
+        $user = (new User())->setEmail('testFindPatientsOfTodayByMedecin@studi.fr')->setPassword('testretAa!1');
+        $medecin = new Medecin();
+        $user->setMedecin($medecin);
+        $medecin->getUser()->setFirstname('Dr. Firstname')->setLastname('Lastname');
+        $this->entityManager->persist($medecin);
+        $this->entityManager->flush();
+
+        // Créez des calendriers fictifs pour aujourd'hui avec le médecin associé
+        $calendar1 = new Calendar();
+        $calendar1->setMedecin($medecin);
+        $calendar1->setStart(new \DateTime('today'));
+        $calendar1->setEnd(new \DateTime('today'));
+        $calendar1->setTitle('testFindPatientsOfTodayByMedecin1');
+
+        $calendar2 = new Calendar();
+        $calendar2->setMedecin($medecin);
+        $calendar2->setStart(new \DateTime('today'));
+        $calendar2->setEnd(new \DateTime('today'));
+        $calendar2->setTitle('testFindPatientsOfTodayByMedecin2');
+
+        $this->entityManager->persist($calendar1);
+        $this->entityManager->persist($calendar2);
+        $this->entityManager->flush();
+
+        // Exécutez la méthode à tester
+        $repository = $this->entityManager->getRepository(Calendar::class);
+        $patients = $repository->findPatientsOfTodayByMedecin($medecin->getId());
+
+        // Assertions
+        $this->assertNotEmpty($patients);
+        $this->assertCount(2, $patients); // Vérifiez le nombre de calendriers récupérés
+
+        foreach ($patients as $calendar) {
+            $this->assertInstanceOf(Calendar::class, $calendar);
+            $this->assertEquals($medecin->getId(), $calendar->getMedecin()->getId());
+        }
+    }
+
+    public function testFindAllPatientsOfToday(): void
+    {
+        // Exécutez la méthode à tester
+        $repository = $this->entityManager->getRepository(Calendar::class);
+        $patients = $repository->findAllPatientsOfToday();
+
+        // Assertions
+        $this->assertNotEmpty($patients);
+        $this->assertCount(17, $patients); // Vérifiez le nombre de calendriers récupérés
+
     }
 
     protected function tearDown(): void

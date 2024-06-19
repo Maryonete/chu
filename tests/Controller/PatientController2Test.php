@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class PatientControllerTest extends WebTestCase
+class PatientController2Test extends WebTestCase
 {
     private KernelBrowser|null $client = null;
     private $doctrine = null;
@@ -75,43 +75,52 @@ class PatientControllerTest extends WebTestCase
         $stay = $stayRepo->findOneBy([], ['id' => 'DESC'], 1);
         $this->client->request('GET', '/sejour_show/' . $stay->getId());
         $this->assertResponseIsSuccessful();
-        // $this->assertSelectorTextContains('h1', 'Séjour');
     }
-    /**
-     * création d'un nouveau séjour
-     */
-    // public function testNewSejour(): void
-    // {
-    //     $userRepo = $this->doctrine->getRepository(User::class);
-    //     $user = $userRepo->findOneByEmail('john.do@test.fr');
-    //     /** @var User $user */
-    //     $this->client->loginUser($user);
 
-    //     $speRepo = $this->doctrine->getRepository(Speciality::class);
-    //     /** @var Speciality $spe */
-    //     $spe = $speRepo->findOneBy([], ['id' => 'DESC'], 1);
 
-    //     $medecinRepo = $this->doctrine->getRepository(Medecin::class);
-    //     /** @var Speciality $spe */
-    //     $medecin = $medecinRepo->findOneBy([], ['id' => 'DESC'], 1);
+    public function testSejourNew(): void
+    {
+        $userRepo = $this->doctrine->getRepository(User::class);
+        $user = $userRepo->findOneByEmail('john.do@test.fr');
+        /** @var User $user */
+        $this->client->loginUser($user);
 
-    //     $this->client->request('GET', '/sejour_new');
+        // Simuler une requête GET sur la route '/sejour_new'
+        $crawler = $this->client->request('GET', '/sejour_new');
 
-    //     $crawler = $this->client->request('GET', '/sejour_new');
-    //     $form = $crawler->selectButton('Enregistrer')->form([
-    //         'stay[speciality]'  =>  $spe->getId(),
-    //         'stay[medecin]'     =>  $medecin->getId(),
-    //         'stay[start_date]'  => (new \DateTime("01-03-2024"))->format('d/m/Y'),
-    //         'stay[end_date]'    => (new \DateTime("02-04-2024"))->format('d/m/Y'),
-    //         'stay[reason]'      =>  "reason to stay",
-    //         'stay[description]' =>  "description of reason to stay",
-    //     ]);
-    //     $this->client->submit($form);
-    //     dump('iiii');
-    //     dump($this->client->getResponse()->headers->get('location'));
+        // Vérifier que la réponse est un succès
+        $this->assertResponseIsSuccessful();
 
-    //     $this->assertResponseRedirects('/patient/home', Response::HTTP_SEE_OTHER);
-    // }
+        $speRepo = $this->doctrine->getRepository(Speciality::class);
+        /** @var Speciality $spe */
+        $spe = $speRepo->findOneBy([], ['id' => 'DESC'], 1);
+
+        $medecinRepo = $this->doctrine->getRepository(Medecin::class);
+        /** @var Speciality $spe */
+        $medecin = $medecinRepo->findOneBy([], ['id' => 'DESC'], 1);
+        // Sélectionner le formulaire et remplir les champs nécessaires
+        $form = $crawler->filter('form[name=stay]')->form();
+        $form['stay[speciality]']  =  $spe->getId();
+        $form['stay[medecin]']     =  $medecin->getId();
+        $form['stay[start_date]']  = (new \DateTime("01-08-2024"))->format('d/m/Y');
+        $form['stay[end_date]']    = (new \DateTime("02-09-2024"))->format('d/m/Y');
+        $form['stay[reason]']      =  "reason to stay";
+        $form['stay[description]'] =  "description of reason to stay";
+        // Soumettre le formulaire en simulant une requête POST
+        $this->client->submit($form);
+
+        // Suivre la redirection après soumission du formulaire
+        $this->client->followRedirect();
+
+        // Vérifier que la redirection est effectuée vers la bonne route
+        $this->assertRouteSame('app_home_patient');
+
+        // Vérifier que le message flash de succès est affiché
+        $this->assertSelectorTextContains('.alert-success', 'Votre séjour est enregistré');
+
+        // Vérifier que le séjour est bien enregistré en base de données (facultatif)
+        // Ajoutez ici des assertions pour vérifier l'état de l'entité Stay en base de données si nécessaire
+    }
 
 
     /**

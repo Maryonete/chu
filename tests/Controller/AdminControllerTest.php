@@ -2,10 +2,13 @@
 
 namespace App\Tests;
 
-use App\Entity\Medecin;
-use App\Entity\Speciality;
-use App\Entity\User;
+use DateTime;
 use App\Entity\Stay;
+use App\Entity\User;
+use App\Entity\Medecin;
+use App\Entity\Calendar;
+use App\Entity\Speciality;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -24,39 +27,86 @@ class AdminControllerTest extends WebTestCase
         $user = $userRepo->findOneByEmail('admin@studi.fr');
         $this->client->loginUser($user);
     }
-    protected function tearDown(): void
+
+
+    public function testCalendarMedecin(): void
     {
-        parent::tearDown();
-        // Restaurer l'état après le test, par exemple en enlevant les gestionnaires d'exceptions
-        // $this->client->getContainer()->get('your.exception.handler')->remove();
+        $medecinRepo = $this->getContainer()->get("doctrine")->getRepository(Medecin::class);
+
+        /** @var Medecin $medecin */
+        $medecin = $medecinRepo->findOneBy([], ['id' => 'DESC'], 1);
+        $id = $medecin->getId();
+
+        $crawler = $this->client->request('GET', '/admin/' . $id . '/calendarMedecin');
+
+        // Vérifier que la requête a abouti avec succès (statut HTTP 200)
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        // Sélectionner le formulaire
+        $form = $crawler->selectButton('Enregistrer')->form();
+
+        // Remplir les champs du formulaire
+        $form['start']       = '2024-06-25';
+        $form['startHeure']  = '09:00:00';
+        $form['end']         = '2024-06-28';
+        $form['endHeure']    = '10:00:00';
+        $form['calendar[title]']       = 'title rdv';
+        $form['calendar[description]']       = 'description rdv';
+
+        // Soumettre le formulaire
+        $this->client->submit($form);
+
+        // Vérifier la redirection après soumission
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+
+        // Suivre la redirection
+        $this->client->followRedirect();
+        $this->assertEquals("/admin/$id/calendarMedecin", $this->client->getRequest()->getPathInfo());
     }
-    /**
-     * Save a rdv in medecin calendar
-     */
-    // public function testCalendarMedecin(): void
-    // {
-    //     $medecinRepo = $this->getContainer()->get("doctrine")->getRepository(Medecin::class);
-    //     /** @var Medecin $medecin */
-    //     $medecin = $medecinRepo->findOneBy([], ['id' => 'DESC'], 1);
+    public function testCalendarMedecinWithStay(): void
+    {
+        $stayRepo = $this->getContainer()->get("doctrine")->getRepository(Stay::class);
+        /** @var Stay $stayWait */
+        $results = $stayRepo->findAll();
+        /** @var Stay $stayWait */
+        $stayWait = null;
+        $currentDate = new \DateTime();
 
-    //     $crawler = $this->client->request('GET', '/admin/' . $medecin->getId() . '/calendarMedecin');
-    //     $this->assertResponseIsSuccessful();
-    //     $this->assertSelectorTextContains('h1', 'Agenda du médecin');
+        foreach ($results as $result) {
+            if (
+                $result->isValidate() == false &&
+                $result->getStartDate() > $currentDate
+            ) {
+                $stayWait = $result;
+                break;
+            }
+        }
+        $idMedecin = $stayWait->getMedecin()->getId();
+        $crawler = $this->client->request('GET', '/admin/' . $idMedecin . '/calendarMedecin');
+        // Vérifier que la requête a abouti avec succès (statut HTTP 200)
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-    //     $stayRepo = $this->getContainer()->get("doctrine")->getRepository(Stay::class);
-    //     $stay = $stayRepo->staysAVenirParMedecin($medecin->getId(), 1);
-    //     $form = $crawler->selectButton('Enregistrer')->form([
-    //         'start'             => '2024-10-01',
-    //         'end'               => '2024-11-01',
-    //         'startHeure'        => '08:30',
-    //         'endHeure'          => '14:30',
-    //         'calendar[title]'   => '[Test] RDV with Patient',
-    //         'stay'              =>  82, //$stay[0]->getId(),
-    //         'calendar[description]' => 'Description du rdv',
-    //     ]);
-    //     $this->client->submit($form);
-    //     $this->assertResponseRedirects('/admin/' . $medecin->getId() . '/calendarMedecin');
-    // }
+
+        // Sélectionner le formulaire
+        $form = $crawler->selectButton('Enregistrer')->form();
+        // Remplir les champs du formulaire
+        $form['start']       = '2024-06-25';
+        $form['startHeure']  = '09:00:00';
+        $form['end']         = '2024-06-28';
+        $form['endHeure']    = '10:00:00';
+        $form['stay']        = (string) $stayWait->getId();
+        $form['calendar[title]']       = $stayWait->getReason();
+        $form['calendar[description]'] = $stayWait->getDescription();
+        // Soumettre le formulaire
+        $this->client->submit($form);
+
+        // Vérifier la redirection après soumission
+        $this->assertTrue($this->client->getResponse()->isRedirect());
+
+        // Suivre la redirection
+        $this->client->followRedirect();
+        $this->assertEquals("/admin/$idMedecin/calendarMedecin", $this->client->getRequest()->getPathInfo());
+    }
 
     /**
      * liste des rdv d'un medecin passé en paramétre

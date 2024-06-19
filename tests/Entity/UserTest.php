@@ -88,7 +88,6 @@ final class UserTest extends TestCase
         $roles = ['ROLE_ADMIN'];
         $this->user->setRoles($roles);
         self::assertSame($roles, $this->user->getRoles());
-        // self::assertEquals(array_merge($roles, ['ROLE_USER']), $this->user->getRoles());
 
         // Test adding roles
         $additionalRoles = ['ROLE_MANAGER', 'ROLE_EDITOR'];
@@ -168,5 +167,33 @@ final class UserTest extends TestCase
         $medecin = $this->createMock(Medecin::class);
         $this->user->setMedecin($medecin);
         self::assertSame($medecin, $this->user->getMedecin());
+    }
+
+    public function testIsAdminWithAdminRole()
+    {
+        $admin = new User();
+        $admin->setRoles(['ROLE_ADMIN']);
+        $this->assertTrue($admin->isAdmin());
+    }
+
+    public function testIsAdminWithoutAdminRole()
+    {
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
+        $this->assertFalse($user->isAdmin());
+    }
+
+    public function testIsUserWithUserRole()
+    {
+        $user = new User();
+        $user->setRoles(['ROLE_USER']);
+        $this->assertTrue($user->isUser());
+    }
+
+    public function testIsUserWithoutUserRole()
+    {
+        $user = new User();
+        $user->setRoles(['ROLE_ADMIN']);
+        $this->assertFalse($user->isUser());
     }
 }

@@ -29,5 +29,5 @@ $env = 'test';
 shell_exec('php bin/console d:d:d --force --env=test');
 shell_exec('php bin/console d:d:c --env=test');
 shell_exec('php bin/console doctrine:database:create --env=test');
-shell_exec('php bin/console doctrine:schema:update --complete --force --env=test');
+shell_exec('php bin/console doctrine:schema:update --force --env=test');
 shell_exec('php bin/console doctrine:fixtures:load -n --env=test');
