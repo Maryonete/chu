@@ -108,6 +108,15 @@ class HomeController extends AbstractController
     #[Route('/robots.txt', name: 'robots_txt', methods: ['GET'])]
     public function robots(): Response
     {
-        return $this->render('seo/robots.txt.twig');
+        $txtContent = <<<TXT
+        User-agent: *
+        Allow: /
+        Disallow: /admin/
+        TXT;
+
+        $response = new Response($txtContent);
+        $response->headers->set('Content-Type', 'text/plain');
+
+        return $response;
     }
 }
