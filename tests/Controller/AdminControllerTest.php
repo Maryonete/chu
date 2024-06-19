@@ -28,6 +28,7 @@ class AdminControllerTest extends WebTestCase
         $this->client->loginUser($user);
     }
 
+
     public function testCalendarMedecin(): void
     {
         $medecinRepo = $this->getContainer()->get("doctrine")->getRepository(Medecin::class);
@@ -64,7 +65,6 @@ class AdminControllerTest extends WebTestCase
     }
     public function testCalendarMedecinWithStay(): void
     {
-
         $stayRepo = $this->getContainer()->get("doctrine")->getRepository(Stay::class);
         /** @var Stay $stayWait */
         $results = $stayRepo->findAll();

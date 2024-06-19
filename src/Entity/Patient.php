@@ -175,18 +175,6 @@ class Patient
         return $this;
     }
 
-    public function removeStay(Stay $stay): static
-    {
-        if ($this->stays->removeElement($stay)) {
-            // set the owning side to null (unless already changed)
-            if ($stay->getPatient() === $this) {
-                $stay->setPatient(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Prescription>
      */

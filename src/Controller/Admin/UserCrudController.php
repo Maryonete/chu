@@ -3,20 +3,26 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use EasyCorp\Bundle\EasyAdminBundle\Config\{Action, Actions, Crud, KeyValueStore};
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use Symfony\Component\Form\FormBuilderInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\{AssociationField, ChoiceField, IdField, EmailField, TextField};
-use Symfony\Component\Form\Extension\Core\Type\{PasswordType, RepeatedType};
-use Symfony\Component\Form\{FormBuilderInterface, FormEvent, FormEvents};
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(
-        public UserPasswordHasherInterface $userPasswordHasher
-    ) {
+    private UserPasswordHasherInterface $userPasswordHasher;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     public static function getEntityFqcn(): string
@@ -34,10 +40,9 @@ class UserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-
         $fields = [
             IdField::new('id')->hideOnForm(),
-            EmailField::new('email'),
+            TextField::new('email'),
             ChoiceField::new('roles')
                 ->setChoices([
                     'ROLE_ADMIN' => 'ROLE_ADMIN',
@@ -51,56 +56,40 @@ class UserCrudController extends AbstractCrudController
             TextField::new('lastname', 'Prénom'),
         ];
 
-        $password = TextField::new('password')
-            ->setFormType(RepeatedType::class)
-            ->setFormTypeOptions([
-                'type' => PasswordType::class,
-                'first_options' => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => '(Repeat)'],
-                'mapped' => false,
-            ])
-            ->setRequired($pageName === Crud::PAGE_NEW)
-            ->onlyOnForms();
-        $fields[] = $password;
+        // Ajouter le champ de mot de passe uniquement sur les formulaires
+        if ($pageName === Crud::PAGE_NEW || $pageName === Crud::PAGE_EDIT) {
+            $fields[] = TextField::new('password')
+                ->setFormTypeOptions([
+                    'type' => PasswordType::class,
+                    'first_options' => ['label' => 'Mot de passe'],
+                    'second_options' => ['label' => '(Répétez)'],
+                    'mapped' => false,
+                ])
+                ->setRequired($pageName === Crud::PAGE_NEW)
+                ->onlyOnForms();
+        }
 
         return $fields;
     }
 
-    public function createNewFormBuilder(
-        EntityDto $entityDto,
-        KeyValueStore $formOptions,
-        AdminContext $context
-    ): FormBuilderInterface {
-        $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
-        return $this->addPasswordEventListener($formBuilder);
-    }
-
-    public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
-    {
-        $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
-        return $this->addPasswordEventListener($formBuilder);
-    }
-
+    // Méthode pour hacher le mot de passe après la soumission du formulaire
     private function addPasswordEventListener(FormBuilderInterface $formBuilder): FormBuilderInterface
     {
-        return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, $this->hashPassword());
-    }
-
-    private function hashPassword(): callable
-    {
-        return function ($event) {
+        return $formBuilder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
-            if (!$form->isValid()) {
+            $data = $event->getData();
+
+            if (!$form->isValid() || !$data instanceof User) {
                 return;
             }
-            $password = $form->get('password')->getData();
-            if ($password === null) {
+
+            $plainPassword = $form->get('password')->getData();
+            if ($plainPassword === null) {
                 return;
             }
-            /** @var User $user */
-            $user = $this->getUser();
-            $hash = $this->userPasswordHasher->hashPassword($user, $password);
-            $form->getData()->setPassword($hash);
-        };
+
+            $hashedPassword = $this->userPasswordHasher->hashPassword($data, $plainPassword);
+            $data->setPassword($hashedPassword);
+        });
     }
 }

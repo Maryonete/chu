@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+
 use App\Entity\Drugs;
 use App\Controller\ApiController;
 use App\Repository\DrugsRepository;
@@ -15,6 +16,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiControllerTest extends WebTestCase
 {
+
     /**
      * Teste la méthode getPatients de ApiController
      */
@@ -27,6 +29,7 @@ class ApiControllerTest extends WebTestCase
 
         // Définir le comportement attendu des mocks
         $request->method('get')->willReturn(1); // Exemple de valeur pour $id
+
 
         $apiController = new ApiController();
         $response = $apiController->getPatients($request, $serializer, $calendarRepository);
@@ -69,6 +72,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertArrayHasKey('id', $responseData[0]); // Vérifie que chaque médicament a un champ 'id'
         $this->assertArrayHasKey('name', $responseData[0]); // Vérifie que chaque médicament a un champ 'name'
         $this->assertEquals(1, $responseData[0]['id']); // Exemple d'assertion sur l'ID du premier médicament
+
         $this->assertEquals('Doliprane', $responseData[0]['name']);
     }
     public function testGetInfoPatientNotFound()
@@ -153,7 +157,6 @@ class ApiControllerTest extends WebTestCase
         );
     }
     // Ajouter d'autres tests pour les autres méthodes d'ApiController
-
     // public function testGetAllPatientsOfDay() { ... }
     // public function testGetInfoPatient() { ... }
     // public function testGetPrescriptionPatient() { ... }

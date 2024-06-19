@@ -196,19 +196,4 @@ final class UserTest extends TestCase
         $user->setRoles(['ROLE_ADMIN']);
         $this->assertFalse($user->isUser());
     }
-
-    // public function testEraseCredentials(): void
-    // {
-    //     // Créez une instance de l'utilisateur avec des informations sensibles
-    //     $user = new User();
-    //     $user->setEmail('john_doe@test.fr');
-    //     $user->setPassword('my_password');
-
-    //     // Appelez eraseCredentials pour effacer les informations sensibles
-    //     $user->eraseCredentials();
-
-    //     // Vérifiez que les informations sensibles ont été effacées
-    //     $this->assertNull($user->getPassword());
-    //     // Ajoutez d'autres assertions au besoin pour vérifier que d'autres informations sensibles sont effacées
-    // }
 }

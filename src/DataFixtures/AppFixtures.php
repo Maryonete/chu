@@ -2,16 +2,18 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Calendar;
-use App\Entity\Drugs;
-use App\Entity\Medecin;
-use App\Entity\Medication;
-use App\Entity\Opinions;
-use App\Entity\Patient;
-use App\Entity\Prescription;
-use App\Entity\Speciality;
-use App\Entity\Stay;
-use App\Entity\User;
+use App\Entity\{
+    Calendar,
+    Drugs,
+    Medecin,
+    Medication,
+    Opinions,
+    Patient,
+    Prescription,
+    Speciality,
+    Stay,
+    User
+};
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -81,7 +83,6 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 10; $i++) {
             $user = new User();
             $user->setRoles(['ROLE_MEDECIN']);
-            // $user->setPassword($this->encoder->hashPassword($user, $this->faker->password()));
             $user->setPassword($this->encoder->hashPassword($user, 'Bx?U86!edoc'));
             $user->setFirstName($this->faker->firstName());
             $user->setLastName($this->faker->lastName());
@@ -95,7 +96,6 @@ class AppFixtures extends Fixture
                 $medecin->addSpeciality($this->faker->randomElement($listSpe));
             }
             $manager->persist($medecin);
-
             $medecins[] = $medecin;
         }
         // USER
@@ -200,7 +200,9 @@ class AppFixtures extends Fixture
             $calendar->setMedecin($userMedecin->getMedecin());
 
             // Définissez les autres attributs du Calendar en fonction des attributs du séjour
-            $calendar->setTitle($stay->getpatient()->getUser()->getFirstname() . ' ' . $stay->getpatient()->getUser()->getLastname());
+            $calendar->setTitle($stay->getpatient()->getUser()->getFirstname() .
+                ' ' .
+                $stay->getpatient()->getUser()->getLastname());
             $calendar->setDescription($stay->getReason());
             $calendar->setStart($stayStartDate->modify('+' . (9 + $heure) . ' hours'));
             $calendar->setEnd($stayEndDate->modify('+' . (14 + $heure) . ' hours'));
@@ -216,7 +218,6 @@ class AppFixtures extends Fixture
     // Medecin test pour api mobile
     private function loadMedecinTest(ObjectManager $manager, String $nb): void
     {
-
         // 1. création du médecin test
         $user = new User();
         $user->setRoles(['ROLE_MEDECIN']);

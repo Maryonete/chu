@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Tests\DataFixtures;
+
+use App\Entity\{Drugs, Medication, Opinions, Speciality, Stay, User};
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\TestCase;
+
+class AppFixturesTest extends TestCase
+{
+    private $entityManager;
+
+    protected function setUp(): void
+    {
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+    }
+
+    public function testLoadSpecialities(): void
+    {
+        // Fetch specialities from the database
+        $specialityRepository = $this->entityManager->getRepository(Speciality::class);
+        $specialities = $specialityRepository->findAll();
+
+        // Assert that 15 specialities are loaded
+        $this->assertCount(15, $specialities, '15 specialities should be loaded');
+    }
+
+    public function testLoadUsers()
+    {
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $this->assertCount(
+            23,
+            $users,
+            '23 users should be loaded (1 admin, 1 staff, 10 medecins, 10 patients)'
+        );
+    }
+
+    public function testLoadStays()
+    {
+        $stays = $this->entityManager->getRepository(Stay::class)->findAll();
+        $this->assertNotEmpty($stays, 'Stays should be loaded');
+    }
+
+    public function testLoadDrugs()
+    {
+        $drugs = $this->entityManager->getRepository(Drugs::class)->findAll();
+        $this->assertCount(6, $drugs, '6 drugs should be loaded');
+    }
+
+    public function testLoadMedications()
+    {
+        $medications = $this->entityManager->getRepository(Medication::class)->findAll();
+        $this->assertCount(180, $medications, '180 medications should be loaded');
+    }
+
+    public function testLoadOpinions()
+    {
+        $opinions = $this->entityManager->getRepository(Opinions::class)->findAll();
+        $this->assertCount(60, $opinions, '60 Opinions should be loaded');
+    }
+}

@@ -113,16 +113,6 @@ class Medecin
         return $this;
     }
 
-    public function removeStay(Stay $stay): static
-    {
-        if ($this->stays->removeElement($stay) && $stay->getMedecin() === $this) {
-            // set the owning side to null (unless already changed)
-            $stay->setMedecin(null);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Calendar>
      */
@@ -141,15 +131,7 @@ class Medecin
         return $this;
     }
 
-    public function removeCalendar(Calendar $calendar): static
-    {
-        if ($this->calendars->removeElement($calendar) && $calendar->getMedecin() === $this) {
-            // set the owning side to null (unless already changed)
-            $calendar->setMedecin(null);
-        }
 
-        return $this;
-    }
 
     /**
      * @return Collection<int, Prescription>
