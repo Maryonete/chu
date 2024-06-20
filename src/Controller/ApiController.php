@@ -240,7 +240,7 @@ class ApiController extends AbstractController
         }
     }
 
-    #[Route('/api/getDrugs', name: 'api_get_drugs', methods: ['GET'])]
+    #[Route('/api/getDrugs', name: 'api_get_drugs', methods: ['GET', 'POST'])]
     /**
      *  Endpoint for retrieving a list of drugs.
      *
