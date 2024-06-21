@@ -153,7 +153,7 @@ class PatientController extends AbstractController
     }
 
 
-    #[Route('{id<\d+>}/medecins', name: 'read_medecin', methods: 'GET')]
+    #[Route('{id<\d+>}/medecins', name: 'listMedecinParSpe', methods: 'GET')]
     /**
      * Liste des médecins associés à une spécialité.
      *

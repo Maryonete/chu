@@ -65,7 +65,7 @@ class AdminController extends AbstractController
         ParameterBagInterface $parameterBagInterface
     ): Response {
 
-        // nouveau rdv
+        // Création du formulaire pour ajouter un nouveau rendez-vous
         $form = $this->createForm(CalendarType::class);
         $form->add('save', SubmitType::class, [
             'label' => 'Enregistrer',
@@ -100,8 +100,11 @@ class AdminController extends AbstractController
             );
         }
         // rdv en attente
-        $listeStayWait = $this->stayRepo->findBy(['validate' => 0, 'medecin' => $medecin], ['start_date' => 'ASC']);
-
+        $listeStayWait = $this->stayRepo->findBy(
+            ['validate' => 0, 'medecin' => $medecin],
+            ['start_date' => 'ASC']
+        );
+        // Rendu de la vue avec les données nécessaires
         return $this->render('admin/calendar_medecin.html.twig', [
             'medecin'       =>  $medecin,
             'listeStayWait' =>  $listeStayWait,
