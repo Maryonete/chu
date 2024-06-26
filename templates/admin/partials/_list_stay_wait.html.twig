@@ -66,7 +66,6 @@
   //evenement sur calendrier des médecins
   function addStayToCalendar(cal) {
     id = cal.value;
-    console.log("addStayToCalendar: " + id);
 
     if (id > 0) {
       let xmlHttp = new XMLHttpRequest();
@@ -74,9 +73,7 @@
       xmlHttp.onreadystatechange = () => {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
           let Data = JSON.parse(xmlHttp.responseText);
-          console.log(Data);
           document.querySelector("input#calendar_title").value = Data[0].title;
-
           document.querySelector("textarea#calendar_description").value =
             Data[0].description;
         }
